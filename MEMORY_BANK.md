@@ -39,3 +39,31 @@
 - Cozum: kullanici dizinindeki Flutter SDK kullanildi.
 - `flutter doctor` PATH uyarisi verdi.
 - Cozum plani: `C:\Users\erens\development\flutter\bin` yolunu PATH'te en uste almak.
+## Tasarim Guncellemesi (2026-05-05)
+
+- Proje, premium katalog deneyimine donusturuldu.
+- Ana bolumler eklendi:
+  - Hero
+  - Kategoriler
+  - Filtrelenebilir urun galerisi
+  - Urun detay sayfasi
+  - Hakkimizda
+  - Iletisim
+- Sticky navbar + smooth section scroll aktif.
+- Hover zoom/overlay efektleri eklendi.
+- Responsive yapi (mobil/tablet/desktop) eklendi.
+- Tipografi: Google Fonts Manrope.
+- Iletisim aksiyonlari: WhatsApp ve Instagram linkleri.
+- Not: Gorseller su an demo URL'ler; istenirse Instagram'a uygun gercek urun gorsellerinle degistirecegim.
+## Tasarim Revizyonu (Referans Mockup Uyumlu)
+
+- Kullanici tarafindan paylasilan 1-6 referans tasarima gore ana sayfa yeniden olusturuldu.
+- Gri zemin + siyah premium tipografi + minimal cizgi dili uygulandi.
+- Ust menu, arama alani, iletisim CTA butonu eklendi.
+- Kategori filtre ciplari eklendi.
+- 3 kolon urun grid ve hover overlay/zoom davranisi eklendi.
+- Urun baslik / seri / fiyat satirlari mockup duzeniyle guncellendi.
+- Sayfalama bileseni eklendi.
+- Koyu temali kurumsal footer olusturuldu.
+- `assets/images/1.png` ... `assets/images/6.png` projeye alindi ve kullanildi.
+- `flutter analyze` temiz, `flutter build web` basarili.

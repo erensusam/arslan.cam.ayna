@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="tr"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary": "#5f5e5b",
+                    "on-error": "#ffffff",
+                    "secondary-fixed-dim": "#c9c6c2",
+                    "on-primary-fixed-variant": "#474646",
+                    "primary-container": "#1c1b1b",
+                    "secondary-container": "#e5e2dd",
+                    "on-surface-variant": "#444748",
+                    "surface": "#f9f9f9",
+                    "on-secondary": "#ffffff",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#eeeeee",
+                    "on-primary-fixed": "#1c1b1b",
+                    "surface-dim": "#dadada",
+                    "tertiary-fixed-dim": "#c7c6c6",
+                    "tertiary": "#000000",
+                    "secondary-fixed": "#e5e2dd",
+                    "primary-fixed-dim": "#c8c6c5",
+                    "on-background": "#1a1c1c",
+                    "tertiary-fixed": "#e3e2e2",
+                    "error-container": "#ffdad6",
+                    "on-primary-container": "#858383",
+                    "primary-fixed": "#e5e2e1",
+                    "surface-tint": "#5f5e5e",
+                    "outline-variant": "#c4c7c7",
+                    "tertiary-container": "#1a1c1c",
+                    "on-tertiary-fixed": "#1a1c1c",
+                    "on-surface": "#1a1c1c",
+                    "on-secondary-fixed-variant": "#474743",
+                    "primary": "#000000",
+                    "surface-container-highest": "#e2e2e2",
+                    "on-secondary-container": "#656461",
+                    "surface-container-low": "#f3f3f3",
+                    "surface-bright": "#f9f9f9",
+                    "error": "#ba1a1a",
+                    "on-tertiary-fixed-variant": "#464747",
+                    "inverse-on-surface": "#f1f1f1",
+                    "on-tertiary-container": "#838484",
+                    "inverse-primary": "#c8c6c5",
+                    "on-primary": "#ffffff",
+                    "outline": "#747878",
+                    "on-error-container": "#93000a",
+                    "surface-container-high": "#e8e8e8",
+                    "surface-variant": "#e2e2e2",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-surface": "#2f3131",
+                    "on-secondary-fixed": "#1c1c19",
+                    "background": "#f9f9f9"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "margin-desktop": "80px",
+                    "section-gap": "160px",
+                    "gutter": "32px",
+                    "unit": "8px",
+                    "container-max": "1440px"
+            },
+            "fontFamily": {
+                    "display-xl": ["Inter"],
+                    "headline-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "headline-lg": ["Inter"],
+                    "body-md": ["Inter"],
+                    "label-caps": ["Inter"]
+            },
+            "fontSize": {
+                    "display-xl": ["72px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "300"}],
+                    "headline-md": ["24px", {"lineHeight": "1.4", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                    "headline-lg": ["40px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.15em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #f9f9f9;
+            color: #1a1c1c;
+            -webkit-font-smoothing: antialiased;
+        }
+        .fade-in { animation: fadeIn 0.6s ease-linear forwards; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .aspect-portrait { aspect-ratio: 3 / 4; }
+        .aspect-landscape { aspect-ratio: 16 / 9; }
+    </style>
+</head>
+<body class="font-body-md overflow-x-hidden">
+<!-- TopNavBar -->
+<nav class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-8 md:px-16 h-24 bg-white/70 dark:bg-stone-950/70 backdrop-blur-md border-b border-stone-200 dark:border-stone-800 fade-in">
+<div class="text-xl font-bold tracking-tighter text-stone-900 dark:text-stone-50">
+            ARSLAN CAM AYNA
+        </div>
+<div class="hidden md:flex items-center gap-12">
+<a class="font-inter tracking-[0.2em] text-[11px] font-medium text-stone-900 dark:text-stone-50 border-b border-stone-900 dark:border-stone-50 pb-1" href="#">ANA SAYFA</a>
+<a class="font-inter tracking-[0.2em] text-[11px] font-medium text-stone-400 dark:text-stone-500 hover:text-stone-900 dark:hover:text-stone-50 transition-colors duration-300" href="#">AYNALAR</a>
+<a class="font-inter tracking-[0.2em] text-[11px] font-medium text-stone-400 dark:text-stone-500 hover:text-stone-900 dark:hover:text-stone-50 transition-colors duration-300" href="#">CAMLAR</a>
+<a class="font-inter tracking-[0.2em] text-[11px] font-medium text-stone-400 dark:text-stone-500 hover:text-stone-900 dark:hover:text-stone-50 transition-colors duration-300" href="#">PROJELER</a>
+<a class="font-inter tracking-[0.2em] text-[11px] font-medium text-stone-400 dark:text-stone-500 hover:text-stone-900 dark:hover:text-stone-50 transition-colors duration-300" href="#">HAKKIMIZDA</a>
+<a class="font-inter tracking-[0.2em] text-[11px] font-medium text-stone-400 dark:text-stone-500 hover:text-stone-900 dark:hover:text-stone-50 transition-colors duration-300" href="#">İLETİŞİM</a>
+</div>
+<button class="md:hidden text-stone-900 dark:text-stone-50">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</nav>
+<!-- Hero Section -->
+<header class="relative h-screen w-full flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img alt="Luxury Interior with Mirror" class="w-full h-full object-cover grayscale-[20%] brightness-90" data-alt="A high-end, minimalist luxury living room featuring a massive, architectural mirror with a thin charcoal frame. The room is bathed in soft, natural morning light, emphasizing clean lines, high-key white walls, and elegant beige furniture. The visual style is architectural editorial with deep contrast and a sense of sophisticated clarity, reflecting the brand's commitment to precision and luxury craftsmanship." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBbAF675t9XVCrk67uXOk33MSB7ZIWQFDI2rwDqZy85LSR83M7YOiGK73L97PrFDog1MsLlvz386RfiCPWjAD85oSnAjVCx0go6_D8EPaLOgIi79p58y6Y50Of95vWbkkfS8qozPjAysQc6qhBAyoT5Mlad0_lWQ-HBM5dKg22dyb-ECkUY6DtzdKYMVVkTWThHZtQzRJmnYus3ArE05d3noaOkSUPpa2TZGeSqAQAeGU-alAbtS9T8FLE9xC3DOiRVTzX_Wa4uqfE"/>
+<div class="absolute inset-0 bg-stone-900/10"></div>
+</div>
+<div class="relative z-10 text-center max-w-4xl px-8 fade-in">
+<h1 class="font-display-xl text-display-xl text-white mb-6 uppercase tracking-widest">
+                Yansımalardaki Zarafet
+            </h1>
+<p class="font-body-lg text-body-lg text-white/90 max-w-2xl mx-auto font-light leading-relaxed">
+                Geleneksel zanaatın modern estetikle buluştuğu noktada, mekanlarınıza derinlik ve ışık katan el yapımı cam ve ayna tasarımları.
+            </p>
+<div class="mt-12">
+<a class="inline-block border border-white px-12 py-4 text-label-caps font-label-caps text-white hover:bg-white hover:text-stone-900 transition-all duration-500 tracking-[0.3em]" href="#koleksiyon">
+                    KEŞFEDİN
+                </a>
+</div>
+</div>
+</header>
+<!-- Categories Section -->
+<section class="py-40 px-8 md:px-16 max-w-[1440px] mx-auto" id="koleksiyon">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter items-end mb-24">
+<div class="md:col-span-6">
+<span class="font-label-caps text-label-caps text-secondary mb-4 block uppercase">Koleksiyonlar</span>
+<h2 class="font-headline-lg text-headline-lg text-primary uppercase">Mekana Değer Katan Dokunuşlar</h2>
+</div>
+<div class="md:col-span-6 md:text-right">
+<p class="font-body-md text-body-md text-secondary max-w-md ml-auto">
+                    Her bir parça, ışığın kırılmasını ve mekanın ferahlığını optimize etmek için özel olarak tasarlanmıştır.
+                </p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-12">
+<!-- Category 1 -->
+<div class="group cursor-pointer">
+<div class="overflow-hidden mb-6 border border-stone-200">
+<img alt="Aynalar" class="w-full aspect-[4/5] object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A collection of decorative, minimalist mirrors with thin metal frames displayed in a bright, modern studio. The lighting is soft and diffused, creating a serene and high-end atmosphere. The image emphasizes the reflective quality and clear glass texture, adhering to a palette of whites, soft beiges, and deep charcoal accents in a professional architectural style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaESMoJz85E10Mp-6S6sU--AAkA3j6naA9PJ2pobT-o9KuPGkfUxUDGAHtfnB5M68TaIW1NuuWsUrnNTi38vZYAssOa-KBLYmQOZSLsYJqC4A02CghHl3axme375PHVYPjzMgtQnKUWn8gTaHwVudSryNBIz2XvlTudaEB9gzgon21v7Ecn7ITIunxfxwrqTFLnOU6vF4K1MS8wjbz2gOJwdRQOVwq4RbzbMpw-f3AnmscK5V6U5IY3By2a7WBPDppf9FzbL6Njps"/>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-2 uppercase">Aynalar</h3>
+<p class="font-label-caps text-label-caps text-secondary tracking-widest">KLASİK VE MODERN TASARIMLAR</p>
+</div>
+<!-- Category 2 -->
+<div class="group cursor-pointer">
+<div class="overflow-hidden mb-6 border border-stone-200">
+<img alt="Cam Ürünler" class="w-full aspect-[4/5] object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Detailed close-up of high-quality architectural glass panels with subtle textures and frosted finishes. The setting is a minimalist gallery with clean, sharp lines and soft shadows. The visual style focus on transparency and light transmission, using a neutral color palette of off-white and cool grays to convey technical excellence and purity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFrARYGGayXff0f_qPe5Ug0D9dejkeCf4xSFPaftwhhHIHfVllW-QZuMKbdJzL7tdTDEoh3EYsrj8dWIojk48v-Kbm1NQNUQO4gOK0ghgr797LtliWGHu537vCQu5nl8iCvkXDBK4Ec3Xi8uWgH79HczHr2fdNTtuTMPzTna88MUn78eKe7bRgsNsoCVgQ3vV1pSLcWVhYIyypPiUsRcMvPe_GJSzDhqf48paJIszJoPjScrv_Rmf6izT0P2S04y8K65Zhmk49LYY"/>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-2 uppercase">Cam Ürünler</h3>
+<p class="font-label-caps text-label-caps text-secondary tracking-widest">MİMARİ ÇÖZÜMLER</p>
+</div>
+<!-- Category 3 -->
+<div class="group cursor-pointer">
+<div class="overflow-hidden mb-6 border border-stone-200">
+<img alt="Dresuarlar" class="w-full aspect-[4/5] object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A sleek, minimalist dresuar console featuring a premium mirrored top surface and charcoal black metal legs. It is placed against a textured off-white wall in a contemporary hallway. The lighting is dramatic yet soft, highlighting the crisp reflections and high-end furniture design that blends traditional craft with modern minimalist aesthetics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD33_TJUZ2dFUZFiMuWof32yMnpt6S0AIvcvZlB8qkSLi02ApSz00_6ZRfUYedp3_5Oc7CTgp4ACu1uCYl1Sx2cFXIjaRGCQvZesSAsBdOT6aV6gvnr0WW7UMzIcfAxXcr46sG8lvrUDSPgtMTrYrSFjaohhQAO574tmUaEpZGTq710BsPhitfgtCEexFqYvwfJvRjx3usLVlELFc_B1XXOKvUEPj66JHF5cQ9ro26W45Srceu9YE2uj71n8lz50_Z4VhExPEkL54c"/>
+</div>
+<h3 class="font-headline-md text-headline-md text-primary mb-2 uppercase">Dresuarlar</h3>
+<p class="font-label-caps text-label-caps text-secondary tracking-widest">LÜKS TAMAMLAYICI PARÇALAR</p>
+</div>
+</div>
+</section>
+<!-- Technical Specs Row -->
+<section class="bg-stone-50 py-24 border-y border-stone-200">
+<div class="px-8 md:px-16 max-w-[1440px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="flex flex-col gap-2">
+<span class="text-stone-300 font-display-xl leading-none">01</span>
+<span class="font-label-caps uppercase tracking-widest text-primary">Ultra Net Cam</span>
+<p class="text-sm text-secondary">Yüksek ışık geçirgenliği ve sıfır renk distorsiyonu.</p>
+</div>
+<div class="flex flex-col gap-2">
+<span class="text-stone-300 font-display-xl leading-none">02</span>
+<span class="font-label-caps uppercase tracking-widest text-primary">Hassas Kesim</span>
+<p class="text-sm text-secondary">CNC teknolojisi ile milimetrik doğrulukta üretim.</p>
+</div>
+<div class="flex flex-col gap-2">
+<span class="text-stone-300 font-display-xl leading-none">03</span>
+<span class="font-label-caps uppercase tracking-widest text-primary">Özel Rodaj</span>
+<p class="text-sm text-secondary">Pürüzsüz ve estetik kenar bitişleri.</p>
+</div>
+<div class="flex flex-col gap-2">
+<span class="text-stone-300 font-display-xl leading-none">04</span>
+<span class="font-label-caps uppercase tracking-widest text-primary">Ekolojik Üretim</span>
+<p class="text-sm text-secondary">Çevre dostu gümüşleme ve kaplama süreçleri.</p>
+</div>
+</div>
+</section>
+<!-- Featured Projects Masonry -->
+<section class="py-40 px-8 md:px-16 max-w-[1440px] mx-auto">
+<div class="mb-24 flex flex-col md:flex-row md:justify-between md:items-end gap-8">
+<h2 class="font-headline-lg text-headline-lg text-primary uppercase">Öne Çıkan Projeler</h2>
+<a class="font-label-caps text-label-caps text-primary border-b border-primary pb-2 hover:opacity-60 transition-opacity" href="#">TÜMÜNÜ GÖRÜNTÜLE</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 auto-rows-[200px]">
+<!-- Project 1 -->
+<div class="md:col-span-8 md:row-span-3 relative group overflow-hidden border border-stone-200">
+<img alt="Project 1" class="w-full h-full object-cover grayscale transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0" data-alt="A grand hotel lobby featuring a massive architectural glass installation that reflects a modern, minimalist interior. The space is filled with high-key lighting, emphasizing clean lines and a premium atmosphere. The glass design uses deep charcoal accents and reflects a sophisticated palette of soft beiges and whites, creating a sense of luxury and transparency." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCJNCmyQquczzPiaJw6dy9lvV0MeFUVmMrhwSWaC7-4C1yRPsDj3DCBIxxlbK9YthSJIi4e3yYldIEnRqb2f0QVq3Z6ehRxxiflTiZH84ZJq6dA7QSrh2BRef_IO5ePMLCknGn_YfQgDeCqRFu8bxyCJyiqdew42FcXhRhS83Z-5egOgPqNxDIR_ZTJW07SstTKEx_ONLballJE1XdarbDFOQuXkx307g4KEqCFssC8HTrDGEsK6hTNJy7nBScPar04v0Jm6nafckA"/>
+<div class="absolute bottom-0 left-0 p-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-t from-black/60 to-transparent w-full">
+<p class="font-label-caps text-[10px] tracking-widest mb-2">İSTANBUL / 2023</p>
+<h4 class="font-headline-md text-lg">MARINA RESIDENCE LOBİ</h4>
+</div>
+</div>
+<!-- Project 2 -->
+<div class="md:col-span-4 md:row-span-2 relative group overflow-hidden border border-stone-200">
+<img alt="Project 2" class="w-full h-full object-cover grayscale transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0" data-alt="A contemporary master bathroom with a large, floor-to-ceiling mirror that visually doubles the space. The design is ultra-minimalist with neutral tones, high-end stone finishes, and soft, indirect lighting. The mirror has a refined charcoal frame, reflecting the brand's focus on high-quality materials and architectural precision in a luxury home setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBDgBwtqhRyMhh32bhFpDC-GA_rflROrP94ovsZUu41jKtonF1FvNjc-yzD7-dXejcrC3eNRbrDjTVV8TZI6JPuuuX2wioXniBt3va28QRvK2hKGJxFNexMKv2JR62xAu4j8wDaoRH7I5lTgVw0gSMt-Yd8xI4m32BWQLWEV4qPsyNO1hxGFIwZIE_rHhhEVfWUbh4DbDSBvImB0y2POZuZjtlQLROPyRVMaAYnzBWkdAXDXIv0BnSmp98NxXGG5DBg2lYyu60JOo4"/>
+<div class="absolute bottom-0 left-0 p-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-t from-black/60 to-transparent w-full">
+<p class="font-label-caps text-[10px] tracking-widest mb-2">ANKARA / 2024</p>
+<h4 class="font-headline-md text-lg">VİLLA K MODERNA</h4>
+</div>
+</div>
+<!-- Project 3 -->
+<div class="md:col-span-4 md:row-span-2 relative group overflow-hidden border border-stone-200">
+<img alt="Project 3" class="w-full h-full object-cover grayscale transition-all duration-700 group-hover:scale-105 group-hover:grayscale-0" data-alt="A high-end corporate office space featuring custom glass partitions and reflective surfaces that create a sense of openness and professional clarity. The visual style is strictly minimalist, using a palette of whites, grays, and deep charcoal. Lighting is even and bright, mimicking a high-end architectural editorial shoot that showcases the technical quality of the glass." src="https://lh3.googleusercontent.com/aida-public/AB6AXuChB1orEKshO9K3vaozq_MHFoRKd0R9C9aYoTXGOucxLpjdJuITwHzCQ7NA158BCrj4y9tpWNKgIB6wqjrODOp4Dxe-gwSKRM_YA9t-3UuiWLgOdJauvKlGXewJaqfm3ZrsQibPE8lf8tydMCsIpVaRIb0QBGrzbcPqfPwEDd8amUiTYfMpPXFrpy02PjOA16yJApok5P7s9ljxNOheOu9u94p4RhMGt5ey8imZoW2kVQ8OQc5TGJR3CPwAsNMpo11TWgUeOsAimnQ"/>
+<div class="absolute bottom-0 left-0 p-8 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-t from-black/60 to-transparent w-full">
+<p class="font-label-caps text-[10px] tracking-widest mb-2">İZMİR / 2023</p>
+<h4 class="font-headline-md text-lg">CENTER OFFICE CAM TASARIM</h4>
+</div>
+</div>
+</div>
+</section>
+<!-- Brand Identity Strip -->
+<section class="py-32 bg-stone-900 text-stone-50 overflow-hidden relative">
+<div class="absolute inset-0 opacity-10">
+<div class="grid grid-cols-12 h-full w-full">
+<div class="border-r border-white/20"></div><div class="border-r border-white/20"></div><div class="border-r border-white/20"></div><div class="border-r border-white/20"></div><div class="border-r border-white/20"></div><div class="border-r border-white/20"></div><div class="border-r border-white/20"></div><div class="border-r border-white/20"></div><div class="border-r border-white/20"></div><div class="border-r border-white/20"></div><div class="border-r border-white/20"></div><div></div>
+</div>
+</div>
+<div class="relative z-10 px-8 text-center">
+<h3 class="font-display-xl text-4xl md:text-6xl uppercase tracking-[0.4em] mb-8">Zanaatın Berraklığı</h3>
+<p class="font-label-caps text-stone-400 tracking-[0.5em] uppercase">Arslan Cam Ayna Atölyesi — 1988'den Bugüne</p>
+</div>
+</section>
+<!-- Footer -->
+<footer class="w-full py-20 px-8 md:px-16 grid grid-cols-1 md:grid-cols-12 gap-8 items-start bg-stone-50 dark:bg-stone-900 border-t border-stone-200 dark:border-stone-800 fade-in">
+<div class="md:col-span-4">
+<div class="text-lg font-black tracking-tighter text-stone-900 dark:text-stone-50 mb-6 uppercase">
+                ARSLAN CAM AYNA
+            </div>
+<p class="font-body-md text-stone-500 dark:text-stone-400 max-w-xs text-sm leading-relaxed">
+                Mimari cam ve lüks ayna tasarımlarında 35 yılı aşkın tecrübe ile yaşam alanlarınıza şeffaf bir estetik katıyoruz.
+            </p>
+</div>
+<div class="md:col-span-2">
+<h5 class="font-label-caps text-[10px] text-stone-900 dark:text-stone-50 mb-6 tracking-widest">MENÜ</h5>
+<ul class="flex flex-col gap-3">
+<li><a class="font-inter tracking-widest text-[10px] uppercase text-stone-500 hover:text-stone-900 dark:hover:text-stone-50 transition-all duration-300" href="#">ANA SAYFA</a></li>
+<li><a class="font-inter tracking-widest text-[10px] uppercase text-stone-500 hover:text-stone-900 dark:hover:text-stone-50 transition-all duration-300" href="#">AYNALAR</a></li>
+<li><a class="font-inter tracking-widest text-[10px] uppercase text-stone-500 hover:text-stone-900 dark:hover:text-stone-50 transition-all duration-300" href="#">CAMLAR</a></li>
+<li><a class="font-inter tracking-widest text-[10px] uppercase text-stone-500 hover:text-stone-900 dark:hover:text-stone-50 transition-all duration-300" href="#">PROJELER</a></li>
+</ul>
+</div>
+<div class="md:col-span-2">
+<h5 class="font-label-caps text-[10px] text-stone-900 dark:text-stone-50 mb-6 tracking-widest">KURUMSAL</h5>
+<ul class="flex flex-col gap-3">
+<li><a class="font-inter tracking-widest text-[10px] uppercase text-stone-500 hover:text-stone-900 dark:hover:text-stone-50 transition-all duration-300" href="#">HAKKIMIZDA</a></li>
+<li><a class="font-inter tracking-widest text-[10px] uppercase text-stone-500 hover:text-stone-900 dark:hover:text-stone-50 transition-all duration-300" href="#">İLETİŞİM</a></li>
+<li><a class="font-inter tracking-widest text-[10px] uppercase text-stone-500 hover:text-stone-900 dark:hover:text-stone-50 transition-all duration-300" href="#">KVKK</a></li>
+<li><a class="font-inter tracking-widest text-[10px] uppercase text-stone-500 hover:text-stone-900 dark:hover:text-stone-50 transition-all duration-300" href="#">ÇEREZ POLİTİKASI</a></li>
+</ul>
+</div>
+<div class="md:col-span-4">
+<h5 class="font-label-caps text-[10px] text-stone-900 dark:text-stone-50 mb-6 tracking-widest">İLETİŞİM</h5>
+<p class="font-inter tracking-widest text-[10px] text-stone-500 mb-4">
+                Organize Sanayi Bölgesi, 4. Cadde No: 12<br/>
+                İstanbul, Türkiye
+            </p>
+<p class="font-inter tracking-widest text-[10px] text-stone-900 dark:text-stone-50">
+                T: +90 (212) 555 00 00<br/>
+                E: info@arslancamayna.com
+            </p>
+</div>
+<div class="md:col-span-12 pt-20 flex flex-col md:flex-row justify-between border-t border-stone-200 dark:border-stone-800 gap-4">
+<p class="font-inter tracking-widest text-[10px] text-stone-400 uppercase">
+                © 2024 ARSLAN CAM AYNA. TÜM HAKLARI SAKLIDIR.
+            </p>
+<div class="flex gap-6">
+<a class="text-stone-400 hover:text-stone-900 transition-colors" href="#"><span class="material-symbols-outlined text-sm">share</span></a>
+<a class="text-stone-400 hover:text-stone-900 transition-colors" href="#"><span class="material-symbols-outlined text-sm">camera_alt</span></a>
+<a class="text-stone-400 hover:text-stone-900 transition-colors" href="#"><span class="material-symbols-outlined text-sm">mail</span></a>
+</div>
+</div>
+</footer>
+</body></html>
