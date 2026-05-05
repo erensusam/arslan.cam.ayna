@@ -19,13 +19,16 @@
 2. Flutter ve Git durumu kontrol edildi.
 3. Flutter projesi olusturuldu (`flutter create`).
 4. Bu Memory Bank dosyasi olusturuldu.
+5. Platform dogrulama tamamlandi:
+   - `flutter build web` basarili
+   - `flutter build windows` basarili
+   - `flutter build apk` basarili
+6. Git deposu baslatildi ve ilk commit atildi (`main` branch).
 
 ## Siradaki Adimlar
-1. Cihaz/platform uygunlugunu dogrula (`flutter doctor`, `flutter devices`).
-2. Web calistirma testi.
-3. Windows calistirma testi.
-4. Android calistirma testi (emulator/cihaz bagliysa).
-5. Git init/commit/push sureci.
+1. GitHub remote ekleme.
+2. `git push -u origin main` ile uzak depoya gonderme.
+3. Ilk ekran (anasayfa) tasarimi ve iceriklerini ekleme.
 
 ## Komut Kisa Notlari
 - Flutter komutlarinda kullanilan yol:
@@ -34,3 +37,5 @@
 ## Hata Kayitlari
 - `Program Files` altindaki Flutter komutu timeout verdi.
 - Cozum: kullanici dizinindeki Flutter SDK kullanildi.
+- `flutter doctor` PATH uyarisi verdi.
+- Cozum plani: `C:\Users\erens\development\flutter\bin` yolunu PATH'te en uste almak.
