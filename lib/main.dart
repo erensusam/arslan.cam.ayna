@@ -531,52 +531,63 @@ class _CollectionCardState extends State<CollectionCard> {
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      cursor: SystemMouseCursors.click,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              clipBehavior: Clip.antiAlias,
-              decoration: const BoxDecoration(),
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  AnimatedScale(
-                    duration: const Duration(milliseconds: 800),
-                    curve: Curves.easeOutCubic,
-                    scale: _isHovered ? 1.05 : 1.0,
-                    child: Image.network(widget.imageUrl, fit: BoxFit.cover),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final hasBoundedHeight = constraints.hasBoundedHeight && constraints.maxHeight.isFinite;
+        final imageHeight = hasBoundedHeight
+            ? (constraints.maxHeight - 92).clamp(180.0, 520.0).toDouble()
+            : 280.0;
+
+        return MouseRegion(
+          onEnter: (_) => setState(() => _isHovered = true),
+          onExit: (_) => setState(() => _isHovered = false),
+          cursor: SystemMouseCursors.click,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: double.infinity,
+                height: imageHeight,
+                child: Container(
+                  clipBehavior: Clip.antiAlias,
+                  decoration: const BoxDecoration(),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      AnimatedScale(
+                        duration: const Duration(milliseconds: 800),
+                        curve: Curves.easeOutCubic,
+                        scale: _isHovered ? 1.05 : 1.0,
+                        child: Image.network(widget.imageUrl, fit: BoxFit.cover),
+                      ),
+                      AnimatedOpacity(
+                        duration: const Duration(milliseconds: 400),
+                        opacity: _isHovered ? 0.2 : 0.0,
+                        child: Container(color: Colors.black),
+                      ),
+                    ],
                   ),
-                  AnimatedOpacity(
-                    duration: const Duration(milliseconds: 400),
-                    opacity: _isHovered ? 0.2 : 0.0,
-                    child: Container(color: Colors.black),
-                  ),
-                ],
+                ),
               ),
-            ),
+              const SizedBox(height: 20),
+              Text(
+                widget.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.headlineMd.copyWith(letterSpacing: 1.0),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                widget.subtitle,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: AppTextStyles.labelCaps.copyWith(color: AppColors.textSecondary),
+              ),
+            ],
           ),
-          const SizedBox(height: 20),
-          Text(
-            widget.title,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-            style: AppTextStyles.headlineMd.copyWith(letterSpacing: 1.0),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            widget.subtitle,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
-            style: AppTextStyles.labelCaps.copyWith(color: AppColors.textSecondary),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
