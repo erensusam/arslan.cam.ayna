@@ -83,3 +83,10 @@
 - Baslik ve alt basliklarda maxLines + ellipsis eklendi.
 - Grid childAspectRatio degerleri yeniden dengelendi (mobile: 0.68, desktop: 0.72).
 - Dogrulama: lutter analyze temiz.
+
+## Layout Constraint Fix (2026-05-06)
+
+- CollectionCard icindeki Expanded kaldirildi; unbounded height hatasi giderildi.
+- Kart govdesi LayoutBuilder ile bounded/unbounded durumlara gore dinamik gorsel yuksekligi hesaplayacak sekilde guncellendi.
+- Column(mainAxisSize: MainAxisSize.min) kullanilarak shrink-wrap uyumu saglandi.
+- Dogrulama: lutter analyze temiz.
