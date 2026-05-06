@@ -90,3 +90,14 @@
 - Kart govdesi LayoutBuilder ile bounded/unbounded durumlara gore dinamik gorsel yuksekligi hesaplayacak sekilde guncellendi.
 - Column(mainAxisSize: MainAxisSize.min) kullanilarak shrink-wrap uyumu saglandi.
 - Dogrulama: lutter analyze temiz.
+
+## Git ve Paket Senkronizasyonu (2026-05-06)
+
+- Premium redesign denemesinin geri alma (revert) sureci tamamlandi ve eski calisan ana sayfa korundu.
+- `pubspec.yaml` bagimliliklari proje yapisina gore guncellendi:
+  - `go_router`
+  - `flutter_animate`
+  - `cached_network_image`
+- `pubspec.lock` yeni bagimlilik cozumune gore yenilendi.
+- macOS plugin kaydi `sqflite_darwin` icin otomatik olarak guncellendi (`GeneratedPluginRegistrant.swift`).
+- Dogrulama: `flutter analyze` temiz.
