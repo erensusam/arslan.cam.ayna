@@ -90,12 +90,3 @@
 - Kart govdesi LayoutBuilder ile bounded/unbounded durumlara gore dinamik gorsel yuksekligi hesaplayacak sekilde guncellendi.
 - Column(mainAxisSize: MainAxisSize.min) kullanilarak shrink-wrap uyumu saglandi.
 - Dogrulama: lutter analyze temiz.
-
-## Homepage Premium Redesign (2026-05-06)
-
-- Ana sayfa akisi premium deneyim hedefiyle tamamen yeniden kurgulandi.
-- Bolumler: Hero, Stil Koleksiyonlari, Yasam Alanlari, Malzeme & Iscilik, Immersive Showcase, Marka Yaklasimi, Instagram Preview, Final CTA.
-- One Cikan Projeler bolumu kaldirildi.
-- Glassmorphism navbar, yavas/soft animasyon dili ve editorial spacing sistemi uygulandi.
-- Responsive yapi mobil/tablet/desktop kirilimlariyla guncellendi.
-- Dogrulama: lutter analyze temiz.
