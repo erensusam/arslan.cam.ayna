@@ -167,7 +167,7 @@ class _CatalogContentState extends State<CatalogContent> {
                     crossAxisCount: isMobile ? 1 : 3, // Smaller cards so they don't take up the whole screen
                     crossAxisSpacing: 32,
                     mainAxisSpacing: 80,
-                    childAspectRatio: isMobile ? 0.72 : 0.82, // Keep product photos visually smaller and cleaner
+                    childAspectRatio: isMobile ? 0.68 : 0.72, // Balanced height after compact card/photo sizing
                   ),
                   itemBuilder: (context, index) {
                     final item = filteredItems[index];
