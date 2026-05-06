@@ -67,3 +67,11 @@
 - Koyu temali kurumsal footer olusturuldu.
 - `assets/images/1.png` ... `assets/images/6.png` projeye alindi ve kullanildi.
 - `flutter analyze` temiz, `flutter build web` basarili.
+
+## Gorsel Boyut Revizyonu (2026-05-06)
+
+- Urun katalog kartlarinda gorseller daha kucuk ve dengeli gorunmesi icin grid oranlari guncellendi.
+- Urun detay sayfasindaki ana urun fotografi yuksekligi azaltildi:
+  - Mobil: `400` -> `320`
+  - Desktop: `600` -> `460`
+- Amac: daha temiz bir premium gorunum ve metin/gorsel dengesini iyilestirmek.
