@@ -75,3 +75,11 @@
   - Mobil: `400` -> `320`
   - Desktop: `600` -> `460`
 - Amac: daha temiz bir premium gorunum ve metin/gorsel dengesini iyilestirmek.
+
+## Overflow Duzeltmesi (2026-05-06)
+
+- Katalog kartlarinda RenderFlex overflow sorunu giderildi.
+- CollectionCard gorsel alani AspectRatio yerine Expanded yapisina alindi.
+- Baslik ve alt basliklarda maxLines + ellipsis eklendi.
+- Grid childAspectRatio degerleri yeniden dengelendi (mobile: 0.68, desktop: 0.72).
+- Dogrulama: lutter analyze temiz.
