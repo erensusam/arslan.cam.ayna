@@ -170,6 +170,90 @@ class _MainShellState extends State<MainShell> {
     return false;
   }
 
+  void _openMobileMenu() {
+    showModalBottomSheet<void>(
+      context: context,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (sheetContext) {
+        final currentPath = GoRouterState.of(context).uri.path;
+        return Container(
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            color: AppColors.surface,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 44,
+                  height: 4,
+                  decoration: BoxDecoration(
+                    color: AppColors.outline,
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                _MobileMenuItem(
+                  title: 'ANA SAYFA',
+                  isActive: currentPath == '/',
+                  onTap: () {
+                    Navigator.of(sheetContext).pop();
+                    context.go('/');
+                  },
+                ),
+                _MobileMenuItem(
+                  title: 'AYNALAR',
+                  isActive: currentPath == '/katalog/aynalar',
+                  onTap: () {
+                    Navigator.of(sheetContext).pop();
+                    context.go('/katalog/aynalar');
+                  },
+                ),
+                _MobileMenuItem(
+                  title: 'CAMLAR',
+                  isActive: currentPath == '/katalog/camlar',
+                  onTap: () {
+                    Navigator.of(sheetContext).pop();
+                    context.go('/katalog/camlar');
+                  },
+                ),
+                _MobileMenuItem(
+                  title: 'DRESUARLAR',
+                  isActive: currentPath == '/katalog/dresuarlar',
+                  onTap: () {
+                    Navigator.of(sheetContext).pop();
+                    context.go('/katalog/dresuarlar');
+                  },
+                ),
+                _MobileMenuItem(
+                  title: 'HAKKIMIZDA',
+                  isActive: currentPath == '/hakkimizda',
+                  onTap: () {
+                    Navigator.of(sheetContext).pop();
+                    context.go('/hakkimizda');
+                  },
+                ),
+                _MobileMenuItem(
+                  title: 'ILETISIM',
+                  isActive: currentPath == '/iletisim',
+                  onTap: () {
+                    Navigator.of(sheetContext).pop();
+                    context.go('/iletisim');
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -180,7 +264,10 @@ class _MainShellState extends State<MainShell> {
             onNotification: _handleScroll,
             child: widget.child,
           ),
-          TopNavBar(isScrolled: _isScrolled),
+          TopNavBar(
+            isScrolled: _isScrolled,
+            onMenuTap: _openMobileMenu,
+          ),
         ],
       ),
     );
@@ -199,7 +286,6 @@ class HomeContent extends StatelessWidget {
           HeroSection(),
           CollectionsSection(),
           TechnicalSpecsSection(),
-          FeaturedProjectsSection(),
           BrandStripSection(),
           SiteFooter(),
         ],
@@ -212,10 +298,12 @@ class HomeContent extends StatelessWidget {
 
 class TopNavBar extends StatelessWidget {
   final bool isScrolled;
+  final VoidCallback? onMenuTap;
 
   const TopNavBar({
     super.key,
     required this.isScrolled,
+    this.onMenuTap,
   });
 
   @override
@@ -228,8 +316,8 @@ class TopNavBar extends StatelessWidget {
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
         child: Container(
-          height: 96,
-          padding: EdgeInsets.symmetric(horizontal: mobile ? 24 : 64),
+          height: mobile ? 80 : 96,
+          padding: EdgeInsets.symmetric(horizontal: mobile ? 16 : 64),
           decoration: BoxDecoration(
             color: isScrolled ? AppColors.surface.withValues(alpha: 0.85) : Colors.transparent,
             border: Border(
@@ -246,9 +334,9 @@ class TopNavBar extends StatelessWidget {
                 child: Text(
                   'ARSLAN CAM AYNA',
                   style: GoogleFonts.inter(
-                    fontSize: 20,
+                    fontSize: mobile ? 16 : 20,
                     fontWeight: FontWeight.w600,
-                    letterSpacing: 2.0,
+                    letterSpacing: mobile ? 1.5 : 2.0,
                     color: AppColors.textPrimary,
                   ),
                 ),
@@ -265,11 +353,43 @@ class TopNavBar extends StatelessWidget {
                   ],
                 ),
               if (mobile)
-                const Icon(Icons.menu, color: AppColors.textPrimary),
+                IconButton(
+                  onPressed: onMenuTap,
+                  icon: const Icon(Icons.menu, color: AppColors.textPrimary),
+                  splashRadius: 24,
+                ),
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+class _MobileMenuItem extends StatelessWidget {
+  final String title;
+  final bool isActive;
+  final VoidCallback onTap;
+
+  const _MobileMenuItem({
+    required this.title,
+    required this.isActive,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+      onTap: onTap,
+      title: Text(
+        title,
+        style: AppTextStyles.labelCaps.copyWith(
+          color: isActive ? AppColors.accent : AppColors.textPrimary,
+          letterSpacing: 1.8,
+        ),
+      ),
+      trailing: isActive ? const Icon(Icons.chevron_right, color: AppColors.accent) : null,
     );
   }
 }
@@ -335,7 +455,7 @@ class HeroSection extends StatelessWidget {
           ),
           Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
+              padding: EdgeInsets.symmetric(horizontal: isMobile ? 20 : 32),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -344,19 +464,19 @@ class HeroSection extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: AppTextStyles.displayXl.copyWith(
                       color: AppColors.textPrimary,
-                      fontSize: isMobile ? 40 : 80,
+                      fontSize: isMobile ? 28 : 80,
                     ),
                   ).animate().fade(duration: 1000.ms, delay: 200.ms).slideY(begin: 0.1, end: 0, duration: 800.ms, curve: Curves.easeOutCubic),
-                  const SizedBox(height: 32),
+                  SizedBox(height: isMobile ? 20 : 32),
                   Container(
                     constraints: const BoxConstraints(maxWidth: 600),
                     child: Text(
                       'Geleneksel zanaatın modern estetikle buluştuğu noktada, mekanlarınıza derinlik ve ışık katan el yapımı cam ve ayna tasarımları.',
                       textAlign: TextAlign.center,
-                      style: AppTextStyles.bodyLg,
+                      style: AppTextStyles.bodyLg.copyWith(fontSize: isMobile ? 15 : 18, height: 1.5),
                     ),
                   ).animate().fade(duration: 1000.ms, delay: 400.ms).slideY(begin: 0.1, end: 0, duration: 800.ms, curve: Curves.easeOutCubic),
-                  const SizedBox(height: 64),
+                  SizedBox(height: isMobile ? 28 : 64),
                   HoverButton(
                     text: 'Koleksiyonu Keşfet',
                     onTap: () {
@@ -389,6 +509,7 @@ class _HoverButtonState extends State<HoverButton> {
 
   @override
   Widget build(BuildContext context) {
+    final isMobile = MediaQuery.of(context).size.width < 800;
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
@@ -398,7 +519,7 @@ class _HoverButtonState extends State<HoverButton> {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 400),
           curve: Curves.easeOutCubic,
-          padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 20),
+          padding: EdgeInsets.symmetric(horizontal: isMobile ? 24 : 48, vertical: isMobile ? 16 : 20),
           decoration: BoxDecoration(
             color: _isHovered 
                 ? (widget.isLight ? AppColors.background : AppColors.textPrimary) 
@@ -432,7 +553,7 @@ class CollectionsSection extends StatelessWidget {
     return Container(
       width: double.infinity,
       constraints: const BoxConstraints(maxWidth: 1440),
-      padding: EdgeInsets.symmetric(horizontal: isMobile ? 32 : 120, vertical: 160),
+      padding: EdgeInsets.symmetric(horizontal: isMobile ? 20 : 120, vertical: isMobile ? 84 : 160),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -463,7 +584,7 @@ class CollectionsSection extends StatelessWidget {
                   style: AppTextStyles.bodyLg,
                 ),
              ),
-          const SizedBox(height: 120),
+          SizedBox(height: isMobile ? 56 : 120),
           // Large edge-to-edge style cards
           Flex(
             direction: isMobile ? Axis.vertical : Axis.horizontal,
@@ -602,11 +723,11 @@ class TechnicalSpecsSection extends StatelessWidget {
     return Container(
       width: double.infinity,
       color: AppColors.surface,
-      padding: const EdgeInsets.symmetric(vertical: 120),
+      padding: EdgeInsets.symmetric(vertical: isMobile ? 72 : 120),
       child: Center(
         child: Container(
           constraints: const BoxConstraints(maxWidth: 1440),
-          padding: EdgeInsets.symmetric(horizontal: isMobile ? 32 : 120),
+          padding: EdgeInsets.symmetric(horizontal: isMobile ? 20 : 120),
           child: Flex(
             direction: isMobile ? Axis.vertical : Axis.horizontal,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -647,173 +768,6 @@ class SpecItem extends StatelessWidget {
   }
 }
 
-class FeaturedProjectsSection extends StatelessWidget {
-  const FeaturedProjectsSection({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final w = MediaQuery.of(context).size.width;
-    final isMobile = w < 800;
-
-    return Container(
-      constraints: const BoxConstraints(maxWidth: 1440),
-      padding: EdgeInsets.symmetric(horizontal: isMobile ? 32 : 120, vertical: 160),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text('ÖNE ÇIKAN PROJELER', style: AppTextStyles.headlineLg.copyWith(fontSize: isMobile ? 32 : 48)),
-              if (!isMobile)
-                Container(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  decoration: const BoxDecoration(border: Border(bottom: BorderSide(color: AppColors.textPrimary))),
-                  child: Text('TÜMÜNÜ GÖRÜNTÜLE', style: AppTextStyles.labelCaps),
-                ),
-            ],
-          ),
-          const SizedBox(height: 96),
-          if (isMobile)
-            const Column(
-              children: [
-                SizedBox(height: 400, child: ProjectCard(
-                  imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCJNCmyQquczzPiaJw6dy9lvV0MeFUVmMrhwSWaC7-4C1yRPsDj3DCBIxxlbK9YthSJIi4e3yYldIEnRqb2f0QVq3Z6ehRxxiflTiZH84ZJq6dA7QSrh2BRef_IO5ePMLCknGn_YfQgDeCqRFu8bxyCJyiqdew42FcXhRhS83Z-5egOgPqNxDIR_ZTJW07SstTKEx_ONLballJE1XdarbDFOQuXkx307g4KEqCFssC8HTrDGEsK6hTNJy7nBScPar04v0Jm6nafckA',
-                  location: 'İSTANBUL / 2023',
-                  title: 'MARINA RESIDENCE LOBİ',
-                )),
-                SizedBox(height: 32),
-                SizedBox(height: 400, child: ProjectCard(
-                  imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBDgBwtqhRyMhh32bhFpDC-GA_rflROrP94ovsZUu41jKtonF1FvNjc-yzD7-dXejcrC3eNRbrDjTVV8TZI6JPuuuX2wioXniBt3va28QRvK2hKGJxFNexMKv2JR62xAu4j8wDaoRH7I5lTgVw0gSMt-Yd8xI4m32BWQLWEV4qPsyNO1hxGFIwZIE_rHhhEVfWUbh4DbDSBvImB0y2POZuZjtlQLROPyRVMaAYnzBWkdAXDXIv0BnSmp98NxXGG5DBg2lYyu60JOo4',
-                  location: 'ANKARA / 2024',
-                  title: 'VİLLA K MODERNA',
-                )),
-              ],
-            )
-          else
-            const SizedBox(
-              height: 500,
-              child: Row(
-                children: [
-                  Expanded(
-                    flex: 7,
-                    child: ProjectCard(
-                      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCJNCmyQquczzPiaJw6dy9lvV0MeFUVmMrhwSWaC7-4C1yRPsDj3DCBIxxlbK9YthSJIi4e3yYldIEnRqb2f0QVq3Z6ehRxxiflTiZH84ZJq6dA7QSrh2BRef_IO5ePMLCknGn_YfQgDeCqRFu8bxyCJyiqdew42FcXhRhS83Z-5egOgPqNxDIR_ZTJW07SstTKEx_ONLballJE1XdarbDFOQuXkx307g4KEqCFssC8HTrDGEsK6hTNJy7nBScPar04v0Jm6nafckA',
-                      location: 'İSTANBUL / 2023',
-                      title: 'MARINA RESIDENCE LOBİ',
-                    ),
-                  ),
-                  SizedBox(width: 48),
-                  Expanded(
-                    flex: 5,
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: ProjectCard(
-                            imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBDgBwtqhRyMhh32bhFpDC-GA_rflROrP94ovsZUu41jKtonF1FvNjc-yzD7-dXejcrC3eNRbrDjTVV8TZI6JPuuuX2wioXniBt3va28QRvK2hKGJxFNexMKv2JR62xAu4j8wDaoRH7I5lTgVw0gSMt-Yd8xI4m32BWQLWEV4qPsyNO1hxGFIwZIE_rHhhEVfWUbh4DbDSBvImB0y2POZuZjtlQLROPyRVMaAYnzBWkdAXDXIv0BnSmp98NxXGG5DBg2lYyu60JOo4',
-                            location: 'ANKARA / 2024',
-                            title: 'VİLLA K MODERNA',
-                          ),
-                        ),
-                        SizedBox(height: 48),
-                        Expanded(
-                          child: ProjectCard(
-                            imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuChB1orEKshO9K3vaozq_MHFoRKd0R9C9aYoTXGOucxLpjdJuITwHzCQ7NA158BCrj4y9tpWNKgIB6wqjrODOp4Dxe-gwSKRM_YA9t-3UuiWLgOdJauvKlGXewJaqfm3ZrsQibPE8lf8tydMCsIpVaRIb0QBGrzbcPqfPwEDd8amUiTYfMpPXFrpy02PjOA16yJApok5P7s9ljxNOheOu9u94p4RhMGt5ey8imZoW2kVQ8OQc5TGJR3CPwAsNMpo11TWgUeOsAimnQ',
-                            location: 'İZMİR / 2023',
-                            title: 'CENTER OFFICE',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class ProjectCard extends StatefulWidget {
-  final String imageUrl;
-  final String location;
-  final String title;
-
-  const ProjectCard({super.key, required this.imageUrl, required this.location, required this.title});
-
-  @override
-  State<ProjectCard> createState() => _ProjectCardState();
-}
-
-class _ProjectCardState extends State<ProjectCard> {
-  bool _isHovered = false;
-
-  @override
-  Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
-      cursor: SystemMouseCursors.click,
-      child: Container(
-        clipBehavior: Clip.antiAlias,
-        decoration: const BoxDecoration(),
-        child: Stack(
-          fit: StackFit.expand,
-          children: [
-            AnimatedScale(
-              duration: const Duration(milliseconds: 1000),
-              curve: Curves.easeOutCubic,
-              scale: _isHovered ? 1.05 : 1.0,
-              child: ColorFiltered(
-                colorFilter: ColorFilter.matrix(_isHovered ? _colorMatrix : _grayscaleMatrix),
-                child: Image.network(widget.imageUrl, fit: BoxFit.cover),
-              ),
-            ),
-            AnimatedOpacity(
-              duration: const Duration(milliseconds: 600),
-              opacity: _isHovered ? 1.0 : 0.0,
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [Colors.black.withValues(alpha: 0.8), Colors.transparent],
-                  ),
-                ),
-                padding: const EdgeInsets.all(48),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(widget.location, style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent)),
-                    const SizedBox(height: 16),
-                    Text(widget.title, style: AppTextStyles.headlineMd.copyWith(color: Colors.white, fontSize: 32)),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  static const List<double> _grayscaleMatrix = [
-    0.2126, 0.7152, 0.0722, 0, 0,
-    0.2126, 0.7152, 0.0722, 0, 0,
-    0.2126, 0.7152, 0.0722, 0, 0,
-    0,      0,      0,      1, 0,
-  ];
-
-  static const List<double> _colorMatrix = [
-    1, 0, 0, 0, 0,
-    0, 1, 0, 0, 0,
-    0, 0, 1, 0, 0,
-    0, 0, 0, 1, 0,
-  ];
-}
-
 class BrandStripSection extends StatelessWidget {
   const BrandStripSection({super.key});
 
@@ -825,13 +779,13 @@ class BrandStripSection extends StatelessWidget {
     return Container(
       width: double.infinity,
       color: AppColors.surfaceLight,
-      padding: EdgeInsets.symmetric(vertical: 120, horizontal: isMobile ? 32 : 64),
+      padding: EdgeInsets.symmetric(vertical: isMobile ? 72 : 120, horizontal: isMobile ? 20 : 64),
       child: Column(
         children: [
           Text(
             'ZANAATIN BERRAKLIĞI',
             textAlign: TextAlign.center,
-            style: AppTextStyles.displayXl.copyWith(color: AppColors.textPrimary, letterSpacing: 8, fontSize: isMobile ? 40 : 80),
+            style: AppTextStyles.displayXl.copyWith(color: AppColors.textPrimary, letterSpacing: isMobile ? 2 : 8, fontSize: isMobile ? 32 : 80),
           ),
           const SizedBox(height: 32),
           Text(
@@ -853,7 +807,7 @@ class SiteFooter extends StatelessWidget {
     final isMobile = MediaQuery.of(context).size.width < 800;
     return Container(
       color: AppColors.background,
-      padding: EdgeInsets.symmetric(horizontal: isMobile ? 32 : 120, vertical: 80),
+      padding: EdgeInsets.symmetric(horizontal: isMobile ? 20 : 120, vertical: isMobile ? 56 : 80),
       child: Column(
         children: [
           Container(height: 1, color: AppColors.outline),
@@ -883,8 +837,9 @@ class SiteFooter extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 64),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Wrap(
+            alignment: WrapAlignment.spaceBetween,
+            runSpacing: 12,
             children: [
               Text('© 2024 Tüm hakları saklıdır.', style: AppTextStyles.bodyMd.copyWith(fontSize: 12)),
               Text('Tasarım & Geliştirme', style: AppTextStyles.bodyMd.copyWith(fontSize: 12)),
@@ -895,3 +850,4 @@ class SiteFooter extends StatelessWidget {
     );
   }
 }
+
