@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'main.dart'; // For AppColors, AppTextStyles and shared components
 
 class ProductItem {
@@ -9,14 +10,22 @@ class ProductItem {
   final String category;
   final String imageUrl;
   final List<String> styleTags;
-  const ProductItem({required this.id, required this.title, required this.category, required this.imageUrl, this.styleTags = const []});
+  final String description;
+  const ProductItem({
+    required this.id,
+    required this.title,
+    required this.category,
+    required this.imageUrl,
+    this.styleTags = const [],
+    this.description = '',
+  });
 }
 
 final List<ProductItem> allProducts = [
   // --- AYNALAR ---
   const ProductItem(
     id: 'a1',
-    title: 'MİNİMALİST FLOTAL AYNA',
+    title: 'MINIMALIST FLOTAL AYNA',
     category: 'Aynalar',
     styleTags: ['Minimal', 'Modern'],
     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAaQ2bpUSggNk7TdPNcdAEFHzAjoJ8__rC1VihCtRXv8rjs_2VWuweWxsbLZfmFdD5PQ91x2ax00DdMcfkkYMh_jzoT8SawYEOb93cAEziv6UwcDkUF5_OPKTd8y2nLHKOFrI015wt8xwa-bYY52y0TBZy-h3LSOjs49-7JVHhQBCt_RqbCX1xoyukvtKruiaWNIL03akeUpWnquiet1GstwWXlI4llxbOSSW5focrx49ASNPM9DGke6PW_cMsxTWerwE8H-G1RGYI',
@@ -30,41 +39,65 @@ final List<ProductItem> allProducts = [
   ),
   const ProductItem(
     id: 'a3',
-    title: 'FLÜTLÜ DEKORATİF AYNA',
+    title: 'FLUTLU DEKORATIF AYNA',
     category: 'Aynalar',
     styleTags: ['Vintage', 'Classic'],
     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDKcyVShv4VHFDlopj7bJfQjD0RvXQktsJpolKZ3ZAGmAksy7Tr8kVWTO5SbcmOVuEB1jBtijPusOAajg0A6PAx7iMwvwFnug-nRWb7NJaVb7z3Z7CUehB5udSTehaQCWFSz0wGHFXTabXprQm6jgswjwtx1Yfv2wmDeLxj9T6UJlT5gJQXbtJgf7qnOXwYAhxQ6Pu2n5Moix61jcarIb3T1_yED5WZYGTj0RaTjYmzK9xd9YX2c0qohFjQYVgalZ2UUAoCSix6_iE',
   ),
-  const ProductItem(id: 'a4', title: 'ELİPS MODERN AYNA', category: 'Aynalar', styleTags: ['Oval Collection'], imageUrl: 'https://picsum.photos/seed/ayna4/600/800'),
-  const ProductItem(id: 'a5', title: 'ÇERÇEVESİZ SALON AYNASI', category: 'Aynalar', styleTags: ['Minimal'], imageUrl: 'https://picsum.photos/seed/ayna5/600/800'),
+  const ProductItem(id: 'a4', title: 'ELIPS MODERN AYNA', category: 'Aynalar', styleTags: ['Oval Collection'], imageUrl: 'https://picsum.photos/seed/ayna4/600/800'),
+  const ProductItem(id: 'a5', title: 'CERCEVESIZ SALON AYNASI', category: 'Aynalar', styleTags: ['Minimal'], imageUrl: 'https://picsum.photos/seed/ayna5/600/800'),
 
-  // --- CAMLAR ---
+    // --- TABLOLAR ---
   const ProductItem(
     id: 'c1',
-    title: 'KÜBİK BRONZ CAM',
-    category: 'Camlar',
-    styleTags: ['Gold Details', 'Luxury'],
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAE4kE71pXXqnY8lsp6TiYnCaGTt9N1SNA1whCBcp3jifqW4Koq75r2KdKcNj6YgmbgDDhiTdZUHmgtr3PCZkExF79vTSc0d023exdnDJeAEgZ5b3olQCjFbPb4bwnG5vTmcTNt76JIGJpa8jdAVTwane9Q8CHXExvyjqAOIHWTTY6JFPqmxfPuHj57we6TENSCpczjoIXdp2dYdKtxbIdUPbmWL2YdpDXO2TVoBj6EzkVEiRsc6tCFWKbInNsS320edQzAkSsXW0A',
+    title: 'YASAM AGACI DEKORATIF TABLO',
+    category: 'Tablolar',
+    styleTags: ['Sanatsal', 'Renkli', 'Modern'],
+    imageUrl: 'assets/images/tablo_1.png',
+    description: 'Canli renk gecisleri ve koklerden tepeye uzanan kompozisyonuyla yasam enerjisini mekana tasiyan modern dekoratif tablo.',
   ),
   const ProductItem(
     id: 'c2',
-    title: 'BUZLU TEMPERLİ CAM',
-    category: 'Camlar',
-    styleTags: ['Minimal'],
-    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBgj6ZgUc5V1n3yi3m9-MsM_JSTvuNl4JHvRPIIwQaz9PqEv2xA0uQQSOrpbY86Bzvd8KJgCjGdHJjkns7byStgTrzLzKrlcB0S4TuoauQfABAM74TDvmRZIGYgJfs6RPlfEFFFGezlyFG99KeC0Z__yS2JdDuq-CNmxpa87lbDVFcAINxUKFvkZReGlhQiZyJOwZ11pHBTbQUIfSn625t5IwjOo4p5i5lBnShRR0HtYJTqF82nHG0uCorikY6vo04iQW76f4ELTjs',
+    title: 'BEYAZ TAVUS KUSU TABLO',
+    category: 'Tablolar',
+    styleTags: ['Luks', 'Klasik', 'Elegant', 'Modern'],
+    imageUrl: 'assets/images/tablo_2.png',
+    description: 'Inci beyazi dokular ve mavi detaylarla zenginlesen tavus kusu temasi, salonda odak noktasi olusturan premium bir tasarim sunar.',
   ),
-  const ProductItem(id: 'c3', title: 'LAMİNE GÜVENLİK CAMI', category: 'Camlar', styleTags: ['Modern'], imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBNkNO84U3QETgYe_acmG5IUvWF4cuPv1_A8O1VLvw6wF-v2fqeNRL8Nsg-hZHcKel4OUfNVaIsdgUFxY3yZK3s5oykMnIipYAhEyUOvwzoBTSqI7DsvV0ESvZG9Xjsbln6KKodGnhPvWLVrWwbW0DB9WgOoFYLhy4JHb50qRymtCpSBkdYfw9aG7RugP4rxHAfe8Zp6wyh-6pNKBaRYBoval5yllNCxN424r8tzjzuJAh6NDK2T16al5noM54UyxyYTqtTIo1zsX4'),
-  
+  const ProductItem(
+    id: 'c3',
+    title: 'KELEBEK VE MAVI GUL TABLO',
+    category: 'Tablolar',
+    styleTags: ['Romantik', 'Sanatsal', 'Modern'],
+    imageUrl: 'assets/images/tablo_3.png',
+    description: 'Narin kelebek formu ile mavi gul detaylarini birlestiren bu kompozisyon, duvara zarif ve etkileyici bir karakter kazandirir.',
+  ),
+  const ProductItem(
+    id: 'c4',
+    title: 'SOYUT ALTIN GEOMETRI TABLO',
+    category: 'Tablolar',
+    styleTags: ['Soyut', 'Geometrik', 'Luks', 'Modern'],
+    imageUrl: 'assets/images/tablo_4.png',
+    description: 'Altin tonlu geometrik katmanlar ve aydinlik yansimalarla tasarlanan soyut form, modern ic mekanlara derinlik katar.',
+  ),
+  const ProductItem(
+    id: 'c5',
+    title: 'METALIK CICEK KOMPOZISYONU',
+    category: 'Tablolar',
+    styleTags: ['Cicek', 'Zarif', 'Modern'],
+    imageUrl: 'assets/images/tablo_5.png',
+    description: 'Metalik mavi ve gumus gecisleriyle bicimlenen cicek kompozisyonu, rafine bir gorunumu guclu bir sanat diliyle bulusturur.',
+  ),
   // --- DRESUARLAR ---
   const ProductItem(
     id: 'd1',
-    title: 'LÜKS CAM DRESUAR',
+    title: 'LUKS CAM DRESUAR',
     category: 'Dresuarlar',
     styleTags: ['Luxury', 'Modern'],
     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD33_TJUZ2dFUZFiMuWof32yMnpt6S0AIvcvZlB8qkSLi02ApSz00_6ZRfUYedp3_5Oc7CTgp4ACu1uCYl1Sx2cFXIjaRGCQvZesSAsBdOT6aV6gvnr0WW7UMzIcfAxXcr46sG8lvrUDSPgtMTrYrSFjaohhQAO574tmUaEpZGTq710BsPhitfgtCEexFqYvwfJvRjx3usLVlELFc_B1XXOKvUEPj66JHF5cQ9ro26W45Srceu9YE2uj71n8lz50_Z4VhExPEkL54c',
   ),
   const ProductItem(id: 'd2', title: 'GOLD AYAKLI CAM DRESUAR', category: 'Dresuarlar', styleTags: ['Gold Details', 'Luxury'], imageUrl: 'https://picsum.photos/seed/dresuar2/600/800'),
-  const ProductItem(id: 'd3', title: 'SİYAH PROFİL DRESUAR', category: 'Dresuarlar', styleTags: ['Black Frame', 'Minimal'], imageUrl: 'https://picsum.photos/seed/dresuar3/600/800'),
+  const ProductItem(id: 'd3', title: 'SIYAH PROFIL DRESUAR', category: 'Dresuarlar', styleTags: ['Black Frame', 'Minimal'], imageUrl: 'https://picsum.photos/seed/dresuar3/600/800'),
 ];
 
 class CatalogContent extends StatefulWidget {
@@ -76,25 +109,36 @@ class CatalogContent extends StatefulWidget {
 }
 
 class _CatalogContentState extends State<CatalogContent> {
-  String _selectedStyle = 'Tümü';
+  String _selectedStyle = 'Tum';
 
   @override
   Widget build(BuildContext context) {
     final isMobile = MediaQuery.of(context).size.width < 800;
     
     // Title capitalization fix based on category
-    final categoryMap = {'aynalar': 'Aynalar', 'camlar': 'Camlar', 'dresuarlar': 'Dresuarlar'};
+    final categoryMap = {
+      'aynalar': 'Aynalar',
+      'saatler': 'Saatler',
+      'dresuarlar': 'Dresuarlar',
+      'sehpalar': 'Sehpalar',
+      'tablolar': 'Tablolar',
+    };
     final displayCategory = categoryMap[widget.category.toLowerCase()] ?? widget.category;
 
     var filteredItems = allProducts.where((p) => p.category.toLowerCase() == widget.category.toLowerCase()).toList();
     
     // Extract unique styles
-    Set<String> allStyles = {'Tümü'};
-    for(var item in filteredItems) {
-      allStyles.addAll(item.styleTags);
+    Set<String> allStyles = {'Tum'};
+    if (widget.category.toLowerCase() == 'tablolar') {
+      allStyles = {'Modern'};
+      filteredItems = filteredItems.where((p) => p.styleTags.contains('Modern')).toList();
+    } else {
+      for (var item in filteredItems) {
+        allStyles.addAll(item.styleTags);
+      }
     }
 
-    if (_selectedStyle != 'Tümü') {
+    if (_selectedStyle != 'Tum' && widget.category.toLowerCase() != 'tablolar') {
       filteredItems = filteredItems.where((p) => p.styleTags.contains(_selectedStyle)).toList();
     }
 
@@ -113,16 +157,59 @@ class _CatalogContentState extends State<CatalogContent> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('KOLEKSİYON / ${displayCategory.toUpperCase()}', style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent))
-                .animate().fade().slideY(begin: 0.3),
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  InkWell(
+                    onTap: () => context.go('/'),
+                    child: Text(
+                      'KOLEKSIYON',
+                      style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent),
+                    ),
+                  ),
+                  Text(' / ', style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent)),
+                  InkWell(
+                    onTap: () => context.go('/katalog/${widget.category.toLowerCase()}'),
+                    child: Text(
+                      displayCategory.toUpperCase(),
+                      style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent),
+                    ),
+                  ),
+                ],
+              ).animate().fade().slideY(begin: 0.3),
               const SizedBox(height: 24),
               Text(displayCategory, style: AppTextStyles.headlineLg.copyWith(fontSize: isMobile ? 48 : 80, fontWeight: FontWeight.w200))
                 .animate().fade(delay: 200.ms).slideY(begin: 0.2),
+              if (widget.category.toLowerCase() == 'tablolar') const SizedBox(height: 20),
+              if (widget.category.toLowerCase() == 'tablolar')
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    InkWell(
+                      onTap: () => context.go('/'),
+                      child: Text('Anasayfa', style: AppTextStyles.bodyMd.copyWith(color: AppColors.textPrimary)),
+                    ),
+                    const SizedBox(width: 8),
+                    const Icon(Icons.chevron_right, size: 16, color: AppColors.textSecondary),
+                    const SizedBox(width: 8),
+                    InkWell(
+                      onTap: () => context.go('/katalog/tablolar'),
+                      child: Text('Tablolar', style: AppTextStyles.bodyMd),
+                    ),
+                    const SizedBox(width: 8),
+                    const Icon(Icons.chevron_right, size: 16, color: AppColors.textSecondary),
+                    const SizedBox(width: 8),
+                    InkWell(
+                      onTap: () => setState(() => _selectedStyle = 'Modern'),
+                      child: Text('Modern', style: AppTextStyles.bodyMd.copyWith(color: AppColors.accent)),
+                    ),
+                  ],
+                ).animate().fade().slideY(begin: 0.2),
               
               const SizedBox(height: 64),
               
               // Style Based Discovery System
-              if (allStyles.length > 1)
+              if (allStyles.isNotEmpty)
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
@@ -136,7 +223,9 @@ class _CatalogContentState extends State<CatalogContent> {
                           decoration: BoxDecoration(
                             border: Border(
                               bottom: BorderSide(
-                                color: _selectedStyle == style ? AppColors.accent : Colors.transparent,
+                                color: (widget.category.toLowerCase() == 'tablolar' ? style == 'Modern' : _selectedStyle == style)
+                                    ? AppColors.accent
+                                    : Colors.transparent,
                                 width: 1,
                               )
                             )
@@ -144,7 +233,9 @@ class _CatalogContentState extends State<CatalogContent> {
                           child: Text(
                             style,
                             style: AppTextStyles.labelCaps.copyWith(
-                              color: _selectedStyle == style ? AppColors.accent : AppColors.textSecondary,
+                              color: (widget.category.toLowerCase() == 'tablolar' ? style == 'Modern' : _selectedStyle == style)
+                                  ? AppColors.accent
+                                  : AppColors.textSecondary,
                               letterSpacing: 2.0,
                             ),
                           ),
@@ -157,7 +248,10 @@ class _CatalogContentState extends State<CatalogContent> {
               const SizedBox(height: 80),
               
               if (filteredItems.isEmpty)
-                Text('Bu stilde ürün bulunmuyor.', style: AppTextStyles.bodyLg)
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Bu stilde urun bulunmuyor.', style: AppTextStyles.bodyLg),
+                )
               else
                 GridView.builder(
                   shrinkWrap: true,
@@ -175,7 +269,7 @@ class _CatalogContentState extends State<CatalogContent> {
                       onTap: () => context.go('/urun/${item.id}'),
                       child: CollectionCard(
                         title: item.title,
-                        subtitle: item.styleTags.join(' • ').toUpperCase(),
+                        subtitle: widget.category.toLowerCase() == 'tablolar' ? 'TABLO KOLEKSIYONU' : item.styleTags.join(' - ').toUpperCase(),
                         imageUrl: item.imageUrl,
                       ),
                     ).animate().fade(delay: (200 + (index * 100)).ms).slideY(begin: 0.1);
@@ -243,13 +337,39 @@ class ProductDetailContent extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('KOLEKSİYONLAR > ${product.category.toUpperCase()}', style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent))
-                          .animate().fade().slideY(),
+                        Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            InkWell(
+                              onTap: () => context.go('/'),
+                              child: Text('KOLEKSIYONLAR', style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent)),
+                            ),
+                            Text(' > ', style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent)),
+                            InkWell(
+                              onTap: () => context.go('/katalog/${product.category.toLowerCase()}'),
+                              child: Text(product.category.toUpperCase(), style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent)),
+                            ),
+                          ],
+                        ).animate().fade().slideY(),
                         const SizedBox(height: 32),
                         Container(
                           width: double.infinity,
                           decoration: BoxDecoration(border: Border.all(color: AppColors.outline)),
-                          child: Image.network(product.imageUrl, fit: BoxFit.cover, height: isMobile ? 320 : 460),
+                          child: product.imageUrl.startsWith('http')
+                              ? SizedBox(
+                                  height: isMobile ? 340 : 520,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12),
+                                    child: Image.network(product.imageUrl, fit: BoxFit.contain),
+                                  ),
+                                )
+                              : SizedBox(
+                                  height: isMobile ? 340 : 520,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12),
+                                    child: Image.asset(product.imageUrl, fit: BoxFit.contain),
+                                  ),
+                                ),
                         ).animate().fade(delay: 200.ms),
                       ],
                     ),
@@ -268,23 +388,43 @@ class ProductDetailContent extends StatelessWidget {
                             .animate().fade(delay: 300.ms).slideY(),
                           const SizedBox(height: 48),
                           Text(
-                            'Geleneksel cam işleme sanatının modern mimariyle buluştuğu nokta. Bu seri, şeffaflığın ve yansımanın en saf halini yaşam alanlarınıza taşıyor. El işçiliğiyle hazırlanan kenar detayları ve üstün cam kalitesiyle zamansız bir parça.',
+                            product.description.isNotEmpty
+                                ? product.description
+                                : 'Geleneksel cam isleme sanatinin modern mimariyle bulustugu nokta. Bu seri, seffafligin ve yansimanin en saf halini yasam alanlariniza tasiyor. El isciligiyle hazirlanan kenar detaylari ve ustun cam kalitesiyle zamansiz bir parca.',
                             style: AppTextStyles.bodyLg,
                           ).animate().fade(delay: 400.ms),
                           const SizedBox(height: 80),
                           
-                          Text('TEKNİK ÖZELLİKLER', style: AppTextStyles.labelCaps.copyWith(color: AppColors.textPrimary)),
+                          Text('TEKNIK OZELLIKLER', style: AppTextStyles.labelCaps.copyWith(color: AppColors.textPrimary)),
                           const SizedBox(height: 16),
                           Container(height: 1, color: AppColors.outline),
                           _buildTechRow('MALZEME', 'Ekstra Berrak Flotal Ayna').animate().fade(delay: 500.ms),
                           _buildTechRow('STANDART BOYUT', '120cm x 40cm x 85cm').animate().fade(delay: 550.ms),
-                          _buildTechRow('YÜZEY İŞLEMİ', 'Bizote & Polisaj').animate().fade(delay: 600.ms),
-                          _buildTechRow('TAŞIMA KAPASİTESİ', '45 kg').animate().fade(delay: 650.ms),
+                          _buildTechRow('YUZEY ISLEMI', 'Bizote & Polisaj').animate().fade(delay: 600.ms),
+                          _buildTechRow('TASIMA KAPASITESI', '45 kg').animate().fade(delay: 650.ms),
                           
                           const SizedBox(height: 80),
-                          HoverButton(text: 'İLETİŞİME GEÇ', onTap: () {
-                            context.go('/iletisim');
-                          }).animate().fade(delay: 700.ms),
+                          Wrap(
+                            spacing: 16,
+                            runSpacing: 16,
+                            children: [
+                              HoverButton(
+                                text: 'ILETISIME GEC',
+                                onTap: () {
+                                  context.go('/iletisim');
+                                },
+                              ),
+                              HoverButton(
+                                text: 'WHATSAPP',
+                                onTap: () {
+                                  launchUrl(
+                                    Uri.parse('https://wa.me/905000000000'),
+                                    mode: LaunchMode.externalApplication,
+                                  );
+                                },
+                              ),
+                            ],
+                          ).animate().fade(delay: 700.ms),
                         ],
                       ),
                     ),
@@ -343,14 +483,14 @@ class AboutContent extends StatelessWidget {
                 Text('HAKKIMIZDA', style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent)).animate().fade().slideY(),
                 const SizedBox(height: 32),
                 Text(
-                  'Yarım Asırlık Ustalık,\nModern Çizgiler.',
+                  'Yarim Asirlik Ustalik,\nModern Cizgiler.',
                   style: AppTextStyles.headlineLg.copyWith(fontSize: isMobile ? 48 : 80, fontWeight: FontWeight.w200),
                 ).animate().fade(delay: 200.ms).slideY(),
                 const SizedBox(height: 64),
                 Container(
                   constraints: const BoxConstraints(maxWidth: 800),
                   child: Text(
-                    '1970\'den beri camın şeffaflığını ve aynanın derinliğini sanatla buluşturuyoruz. Geleneksel zanaat tekniklerini, modern mimari trendlerle harmanlayarak mekanlarınıza değer katıyoruz.',
+                    '1970\'den beri camin seffafligini ve aynanin derinligini sanatla bulusturuyoruz. Geleneksel zanaat tekniklerini, modern mimari trendlerle harmanlayarak mekanlariniza deger katiyoruz.',
                     style: AppTextStyles.bodyLg,
                   ),
                 ).animate().fade(delay: 400.ms),
@@ -358,13 +498,36 @@ class AboutContent extends StatelessWidget {
             ),
           ),
           
-          // Image Break
-          SizedBox(
-            height: 600,
+          // Visual Block
+          Container(
             width: double.infinity,
-            child: Image.network(
-              'https://lh3.googleusercontent.com/aida-public/AB6AXuBi5GXOZBAnOWl-1INnxIUBxT9AcvLxOvp1wkCb-fRFlrnyRjFVPYW2qaYgdDiFkV6NwWtVx-YctVuCeiYPMmAR81RgCFdYtwQBg5OwXoKvpey7jPzv34WNaRSPTCRqN-vi_2zN6lP0R02CwtGGJdMYDpIJ6aNyBm2ZSL2k-DSDLLaFgpjr0WIqeCO08hyiKoS_psiVcG0dnAmpiYpp-kFCA3FDdTGxgv2T5IYiZ_z_0QAWlq9uRjdmPug5sRFuQ_jYgddEneJspDM',
-              fit: BoxFit.cover,
+            alignment: Alignment.center,
+            padding: EdgeInsets.symmetric(horizontal: isMobile ? 32 : 120),
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 1440),
+              child: Flex(
+                direction: isMobile ? Axis.vertical : Axis.horizontal,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: isMobile ? 0 : 3,
+                    child: Container(
+                      height: isMobile ? 320 : 460,
+                      decoration: BoxDecoration(border: Border.all(color: AppColors.outline)),
+                      child: Image.asset('assets/images/4.png', fit: BoxFit.cover),
+                    ),
+                  ),
+                  SizedBox(width: isMobile ? 0 : 24, height: isMobile ? 24 : 0),
+                  Expanded(
+                    flex: isMobile ? 0 : 2,
+                    child: Container(
+                      height: isMobile ? 220 : 300,
+                      decoration: BoxDecoration(border: Border.all(color: AppColors.outline)),
+                      child: Image.asset('assets/images/2.png', fit: BoxFit.cover),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ).animate().fade(delay: 500.ms),
 
@@ -377,17 +540,17 @@ class AboutContent extends StatelessWidget {
               children: [
                 Expanded(
                   flex: isMobile ? 0 : 1,
-                  child: _buildFeature('Üstün Kalite', 'Uluslararası standartlarda sertifikalı cam ve ayna panelleri ile ömür boyu dayanıklılık garantisi sunuyoruz.'),
+                  child: _buildFeature('Ustun Kalite', 'Uluslararasi standartlarda sertifikali cam ve ayna panelleri ile omur boyu dayaniklilik garantisi sunuyoruz.'),
                 ),
                 SizedBox(width: isMobile ? 0 : 32, height: isMobile ? 32 : 0),
                 Expanded(
                   flex: isMobile ? 0 : 1,
-                  child: _buildFeature('Özel Tasarım', 'Mimar ve tasarımcıların hayallerini, özel kesim ve işleme teknikleriyle gerçeğe dönüştüren butik üretim anlayışı.'),
+                  child: _buildFeature('Ozel Tasarim', 'Mimar ve tasarimcilarin hayallerini, ozel kesim ve isleme teknikleriyle gercege donusturen butik uretim anlayisi.'),
                 ),
                 SizedBox(width: isMobile ? 0 : 32, height: isMobile ? 32 : 0),
                 Expanded(
                   flex: isMobile ? 0 : 1,
-                  child: _buildFeature('Sanatsal Yaklaşım', 'Camı sadece yapı malzemesi değil, mekana ruh katan sanatsal bir enstrüman olarak ele alıyoruz.'),
+                  child: _buildFeature('Sanatsal Yaklasim', 'Cami sadece yapi malzemesi degil, mekana ruh katan sanatsal bir enstruman olarak ele aliyoruz.'),
                 ),
               ],
             ),
@@ -425,9 +588,9 @@ class ContactContent extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('İLETİŞİM', style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent)).animate().fade().slideY(),
+                  Text('ILETISIM', style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent)).animate().fade().slideY(),
                   const SizedBox(height: 32),
-                  Text('Projelerinizi\nKonuşalım.', style: AppTextStyles.headlineLg.copyWith(fontSize: isMobile ? 48 : 80, fontWeight: FontWeight.w200))
+                  Text('Projelerinizi\nKonusalim.', style: AppTextStyles.headlineLg.copyWith(fontSize: isMobile ? 48 : 80, fontWeight: FontWeight.w200))
                     .animate().fade(delay: 200.ms).slideY(),
                   
                   const SizedBox(height: 120),
@@ -444,9 +607,9 @@ class ContactContent extends StatelessWidget {
                           children: [
                             Text('ADRES', style: AppTextStyles.labelCaps),
                             const SizedBox(height: 16),
-                            Text('Güneşevler Mahallesi 117.Cadde No:19/A\nArslan Cam Ayna\nAnkara, Turkey 06140', style: AppTextStyles.bodyLg),
+                            Text('Gunesevler Mahallesi 117.Cadde No:19/A\nArslan Cam Ayna\nAnkara, Turkey 06140', style: AppTextStyles.bodyLg),
                             const SizedBox(height: 64),
-                            Text('İLETİŞİM BİLGİLERİ', style: AppTextStyles.labelCaps),
+                            Text('ILETISIM BILGILERI', style: AppTextStyles.labelCaps),
                             const SizedBox(height: 16),
                             Text('+90 (312) 555 00 00\nhello@arslancamayna.com', style: AppTextStyles.bodyLg),
                           ],
@@ -464,7 +627,7 @@ class ContactContent extends StatelessWidget {
                             TextField(
                               style: AppTextStyles.bodyLg,
                               decoration: InputDecoration(
-                                labelText: 'Adınız Soyadınız',
+                                labelText: 'Adiniz Soyadiniz',
                                 labelStyle: AppTextStyles.labelCaps.copyWith(color: AppColors.textSecondary),
                                 enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: AppColors.outline)),
                                 focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: AppColors.accent)),
@@ -485,14 +648,29 @@ class ContactContent extends StatelessWidget {
                               maxLines: 3,
                               style: AppTextStyles.bodyLg,
                               decoration: InputDecoration(
-                                labelText: 'Mesajınız',
+                                labelText: 'Mesajiniz',
                                 labelStyle: AppTextStyles.labelCaps.copyWith(color: AppColors.textSecondary),
                                 enabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: AppColors.outline)),
                                 focusedBorder: const UnderlineInputBorder(borderSide: BorderSide(color: AppColors.accent)),
                               ),
                             ),
                             const SizedBox(height: 64),
-                            HoverButton(text: 'GÖNDER', onTap: () {}, isLight: true),
+                            Wrap(
+                              spacing: 16,
+                              runSpacing: 16,
+                              children: [
+                                HoverButton(text: 'GONDER', onTap: () {}),
+                                HoverButton(
+                                  text: 'WHATSAPP',
+                                  onTap: () {
+                                    launchUrl(
+                                      Uri.parse('https://wa.me/905000000000'),
+                                      mode: LaunchMode.externalApplication,
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ).animate().fade(delay: 600.ms),
@@ -508,3 +686,6 @@ class ContactContent extends StatelessWidget {
     );
   }
 }
+
+
+

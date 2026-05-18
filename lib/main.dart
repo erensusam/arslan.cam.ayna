@@ -1,4 +1,4 @@
-import 'dart:ui';
+﻿import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
@@ -207,6 +207,14 @@ class _MainShellState extends State<MainShell> {
                   },
                 ),
                 _MobileMenuItem(
+                  title: 'DRESUARLAR',
+                  isActive: currentPath == '/katalog/dresuarlar',
+                  onTap: () {
+                    Navigator.of(sheetContext).pop();
+                    context.go('/katalog/dresuarlar');
+                  },
+                ),
+                _MobileMenuItem(
                   title: 'AYNALAR',
                   isActive: currentPath == '/katalog/aynalar',
                   onTap: () {
@@ -215,19 +223,27 @@ class _MainShellState extends State<MainShell> {
                   },
                 ),
                 _MobileMenuItem(
-                  title: 'CAMLAR',
-                  isActive: currentPath == '/katalog/camlar',
+                  title: 'SEHPALAR',
+                  isActive: currentPath == '/katalog/sehpalar',
                   onTap: () {
                     Navigator.of(sheetContext).pop();
-                    context.go('/katalog/camlar');
+                    context.go('/katalog/sehpalar');
                   },
                 ),
                 _MobileMenuItem(
-                  title: 'DRESUARLAR',
-                  isActive: currentPath == '/katalog/dresuarlar',
+                  title: 'SAATLER',
+                  isActive: currentPath == '/katalog/saatler',
                   onTap: () {
                     Navigator.of(sheetContext).pop();
-                    context.go('/katalog/dresuarlar');
+                    context.go('/katalog/saatler');
+                  },
+                ),
+                _MobileMenuItem(
+                  title: 'TABLOLAR',
+                  isActive: currentPath == '/katalog/tablolar',
+                  onTap: () {
+                    Navigator.of(sheetContext).pop();
+                    context.go('/katalog/tablolar');
                   },
                 ),
                 _MobileMenuItem(
@@ -331,25 +347,37 @@ class TopNavBar extends StatelessWidget {
             children: [
               InkWell(
                 onTap: () => context.go('/'),
-                child: Text(
-                  'ARSLAN CAM AYNA',
-                  style: GoogleFonts.inter(
-                    fontSize: mobile ? 16 : 20,
-                    fontWeight: FontWeight.w600,
-                    letterSpacing: mobile ? 1.5 : 2.0,
-                    color: AppColors.textPrimary,
-                  ),
+                child: Row(
+                  children: [
+                    Image.asset(
+                      'assets/images/logo_lion.png',
+                      width: mobile ? 30 : 38,
+                      height: mobile ? 30 : 38,
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      'ARSLAN CAM AYNA',
+                      style: GoogleFonts.inter(
+                        fontSize: mobile ? 15 : 19,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: mobile ? 1.2 : 1.8,
+                        color: AppColors.textPrimary,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               if (!mobile)
                 Row(
                   children: [
                     _NavLink(title: 'ANA SAYFA', isActive: currentPath == '/', onTap: () => context.go('/')),
-                    _NavLink(title: 'AYNALAR', isActive: currentPath == '/katalog/aynalar', onTap: () => context.go('/katalog/aynalar')),
-                    _NavLink(title: 'CAMLAR', isActive: currentPath == '/katalog/camlar', onTap: () => context.go('/katalog/camlar')),
                     _NavLink(title: 'DRESUARLAR', isActive: currentPath == '/katalog/dresuarlar', onTap: () => context.go('/katalog/dresuarlar')),
+                    _NavLink(title: 'AYNALAR', isActive: currentPath == '/katalog/aynalar', onTap: () => context.go('/katalog/aynalar')),
+                    _NavLink(title: 'SEHPALAR', isActive: currentPath == '/katalog/sehpalar', onTap: () => context.go('/katalog/sehpalar')),
+                    _NavLink(title: 'SAATLER', isActive: currentPath == '/katalog/saatler', onTap: () => context.go('/katalog/saatler')),
+                    _NavLink(title: 'TABLOLAR', isActive: currentPath == '/katalog/tablolar', onTap: () => context.go('/katalog/tablolar')),
                     _NavLink(title: 'HAKKIMIZDA', isActive: currentPath == '/hakkimizda', onTap: () => context.go('/hakkimizda')),
-                    _NavLink(title: 'İLETİŞİM', isActive: currentPath == '/iletisim', onTap: () => context.go('/iletisim')),
+                    _NavLink(title: 'ILETISIM', isActive: currentPath == '/iletisim', onTap: () => context.go('/iletisim')),
                   ],
                 ),
               if (mobile)
@@ -448,7 +476,7 @@ class HeroSection extends StatelessWidget {
         children: [
           // Parallax effect on image
           Image.network(
-            'https://lh3.googleusercontent.com/aida-public/AB6AXuBbAF675t9XVCrk67uXOk33MSB7ZIWQFDI2rwDqZy85LSR83M7YOiGK73L97PrFDog1MsLlvz386RfiCPWjAD85oSnAjVCx0go6_D8EPaLOgIi79p58y6Y50Of95vWbkkfS8qozPjAysQc6qhBAyoT5Mlad0_lWQ-HBM5dKg22dyb-ECkUY6DtzdKYMVVkTWThHZtQzRJmnYus3ArE05d3noaOkSUPpa2TZGeSqAQAeGU-alAbtS9T8FLE9xC3DOiRVTzX_Wa4uqfE',
+            'https://lh3.googleusercontent.com/aida-public/AB6AXuD33_TJUZ2dFUZFiMuWof32yMnpt6S0AIvcvZlB8qkSLi02ApSz00_6ZRfUYedp3_5Oc7CTgp4ACu1uCYl1Sx2cFXIjaRGCQvZesSAsBdOT6aV6gvnr0WW7UMzIcfAxXcr46sG8lvrUDSPgtMTrYrSFjaohhQAO574tmUaEpZGTq710BsPhitfgtCEexFqYvwfJvRjx3usLVlELFc_B1XXOKvUEPj66JHF5cQ9ro26W45Srceu9YE2uj71n8lz50_Z4VhExPEkL54c',
             fit: BoxFit.cover,
             color: Colors.black.withValues(alpha: 0.6), // Darken for premium feel
             colorBlendMode: BlendMode.darken,
@@ -460,7 +488,7 @@ class HeroSection extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'YANSIMALARDAKİ ZARAFET',
+                    'YANSIMALARDAKI ZARAFET',
                     textAlign: TextAlign.center,
                     style: AppTextStyles.displayXl.copyWith(
                       color: AppColors.textPrimary,
@@ -471,14 +499,14 @@ class HeroSection extends StatelessWidget {
                   Container(
                     constraints: const BoxConstraints(maxWidth: 600),
                     child: Text(
-                      'Geleneksel zanaatın modern estetikle buluştuğu noktada, mekanlarınıza derinlik ve ışık katan el yapımı cam ve ayna tasarımları.',
+                      'Geleneksel zanaatin modern estetikle bulustugu noktada, mekanlariniza derinlik ve isik katan el yapimi cam ve ayna tasarimlari.',
                       textAlign: TextAlign.center,
                       style: AppTextStyles.bodyLg.copyWith(fontSize: isMobile ? 15 : 18, height: 1.5),
                     ),
                   ).animate().fade(duration: 1000.ms, delay: 400.ms).slideY(begin: 0.1, end: 0, duration: 800.ms, curve: Curves.easeOutCubic),
                   SizedBox(height: isMobile ? 28 : 64),
                   HoverButton(
-                    text: 'Koleksiyonu Keşfet',
+                    text: 'Koleksiyonu Kesfet',
                     onTap: () {
                       context.go('/katalog/aynalar');
                     },
@@ -557,19 +585,19 @@ class CollectionsSection extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('KOLEKSİYONLAR', style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent)).animate().fade().slideY(begin: 0.5),
+          Text('KOLEKSIYONLAR', style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent)).animate().fade().slideY(begin: 0.5),
           const SizedBox(height: 24),
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Expanded(
-                child: Text('Mekana Değer Katan\nDokunuşlar.', style: AppTextStyles.headlineLg.copyWith(fontSize: isMobile ? 40 : 56, height: 1.1))
+                child: Text('Mekana Deger Katan\nDokunuslar.', style: AppTextStyles.headlineLg.copyWith(fontSize: isMobile ? 40 : 56, height: 1.1))
                   .animate().fade(delay: 200.ms).slideY(begin: 0.2),
               ),
               if (!isMobile)
                 Expanded(
                   child: Text(
-                    'Her bir parça, ışığın kırılmasını ve mekanın ferahlığını optimize etmek için özel olarak tasarlanmıştır.',
+                    'Her bir parca, isigin kirilmasini ve mekanin ferahligini optimize etmek icin ozel olarak tasarlanmistir.',
                     textAlign: TextAlign.right,
                     style: AppTextStyles.bodyLg,
                   ).animate().fade(delay: 300.ms),
@@ -580,7 +608,7 @@ class CollectionsSection extends StatelessWidget {
              Padding(
                padding: const EdgeInsets.only(top: 32.0),
                child: Text(
-                  'Her bir parça, ışığın kırılmasını ve mekanın ferahlığını optimize etmek için özel olarak tasarlanmıştır.',
+                  'Her bir parca, isigin kirilmasini ve mekanin ferahligini optimize etmek icin ozel olarak tasarlanmistir.',
                   style: AppTextStyles.bodyLg,
                 ),
              ),
@@ -590,40 +618,59 @@ class CollectionsSection extends StatelessWidget {
             direction: isMobile ? Axis.vertical : Axis.horizontal,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
+              Flexible(
                 flex: isMobile ? 0 : 1,
+                fit: isMobile ? FlexFit.loose : FlexFit.tight,
                 child: GestureDetector(
-                  onTap: () => context.go('/katalog/aynalar'),
+                  onTap: () => context.go('/katalog/saatler'),
                   child: const CollectionCard(
-                    title: 'AYNALAR',
-                    subtitle: 'KLASİK VE MODERN TASARIMLAR',
-                    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDaESMoJz85E10Mp-6S6sU--AAkA3j6naA9PJ2pobT-o9KuPGkfUxUDGAHtfnB5M68TaIW1NuuWsUrnNTi38vZYAssOa-KBLYmQOZSLsYJqC4A02CghHl3axme375PHVYPjzMgtQnKUWn8gTaHwVudSryNBIz2XvlTudaEB9gzgon21v7Ecn7ITIunxfxwrqTFLnOU6vF4K1MS8wjbz2gOJwdRQOVwq4RbzbMpw-f3AnmscK5V6U5IY3By2a7WBPDppf9FzbL6Njps',
+                    title: 'SAATLER',
+                    subtitle: 'MODERN VE DEKORATIF',
+                    imageUrl: 'assets/images/6.png',
                   ),
                 ),
               ).animate().fade(delay: 400.ms).slideY(begin: 0.1),
               SizedBox(width: isMobile ? 0 : 48, height: isMobile ? 64 : 0),
-              Expanded(
+              Flexible(
                 flex: isMobile ? 0 : 1,
+                fit: isMobile ? FlexFit.loose : FlexFit.tight,
                 child: GestureDetector(
-                  onTap: () => context.go('/katalog/camlar'),
+                  onTap: () => context.go('/katalog/aynalar'),
                   child: Padding(
                     padding: EdgeInsets.only(top: isMobile ? 0 : 80),
                     child: const CollectionCard(
-                      title: 'CAM ÜRÜNLER',
-                      subtitle: 'MİMARİ ÇÖZÜMLER',
-                      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAFrARYGGayXff0f_qPe5Ug0D9dejkeCf4xSFPaftwhhHIHfVllW-QZuMKbdJzL7tdTDEoh3EYsrj8dWIojk48v-Kbm1NQNUQO4gOK0ghgr797LtliWGHu537vCQu5nl8iCvkXDBK4Ec3Xi8uWgH79HczHr2fdNTtuTMPzTna88MUn78eKe7bRgsNsoCVgQ3vV1pSLcWVhYIyypPiUsRcMvPe_GJSzDhqf48paJIszJoPjScrv_Rmf6izT0P2S04y8K65Zhmk49LYY',
+                      title: 'AYNALAR',
+                      subtitle: 'KLASIK VE MODERN TASARIMLAR',
+                      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDaESMoJz85E10Mp-6S6sU--AAkA3j6naA9PJ2pobT-o9KuPGkfUxUDGAHtfnB5M68TaIW1NuuWsUrnNTi38vZYAssOa-KBLYmQOZSLsYJqC4A02CghHl3axme375PHVYPjzMgtQnKUWn8gTaHwVudSryNBIz2XvlTudaEB9gzgon21v7Ecn7ITIunxfxwrqTFLnOU6vF4K1MS8wjbz2gOJwdRQOVwq4RbzbMpw-f3AnmscK5V6U5IY3By2a7WBPDppf9FzbL6Njps',
                     ),
                   ),
                 ),
               ).animate().fade(delay: 500.ms).slideY(begin: 0.1),
               SizedBox(width: isMobile ? 0 : 48, height: isMobile ? 64 : 0),
-              Expanded(
+              Flexible(
                 flex: isMobile ? 0 : 1,
+                fit: isMobile ? FlexFit.loose : FlexFit.tight,
+                child: GestureDetector(
+                  onTap: () => context.go('/katalog/sehpalar'),
+                  child: Padding(
+                    padding: EdgeInsets.only(top: isMobile ? 0 : 80),
+                    child: const CollectionCard(
+                      title: 'SEHPALAR',
+                      subtitle: 'MODERN TAMAMLAYICI',
+                      imageUrl: 'https://picsum.photos/seed/sehpa1/600/800',
+                    ),
+                  ),
+                ),
+              ).animate().fade(delay: 550.ms).slideY(begin: 0.1),
+              SizedBox(width: isMobile ? 0 : 48, height: isMobile ? 64 : 0),
+              Flexible(
+                flex: isMobile ? 0 : 1,
+                fit: isMobile ? FlexFit.loose : FlexFit.tight,
                 child: GestureDetector(
                   onTap: () => context.go('/katalog/dresuarlar'),
                   child: const CollectionCard(
                     title: 'DRESUARLAR',
-                    subtitle: 'LÜKS TAMAMLAYICI PARÇALAR',
+                    subtitle: 'LUKS TAMAMLAYICI PARCALAR',
                     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD33_TJUZ2dFUZFiMuWof32yMnpt6S0AIvcvZlB8qkSLi02ApSz00_6ZRfUYedp3_5Oc7CTgp4ACu1uCYl1Sx2cFXIjaRGCQvZesSAsBdOT6aV6gvnr0WW7UMzIcfAxXcr46sG8lvrUDSPgtMTrYrSFjaohhQAO574tmUaEpZGTq710BsPhitfgtCEexFqYvwfJvRjx3usLVlELFc_B1XXOKvUEPj66JHF5cQ9ro26W45Srceu9YE2uj71n8lz50_Z4VhExPEkL54c',
                   ),
                 ),
@@ -655,9 +702,32 @@ class _CollectionCardState extends State<CollectionCard> {
     return LayoutBuilder(
       builder: (context, constraints) {
         final hasBoundedHeight = constraints.hasBoundedHeight && constraints.maxHeight.isFinite;
-        final imageHeight = hasBoundedHeight
-            ? (constraints.maxHeight - 92).clamp(180.0, 520.0).toDouble()
-            : 280.0;
+
+        Widget imageWidget = Container(
+          clipBehavior: Clip.antiAlias,
+          decoration: const BoxDecoration(),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              AnimatedScale(
+                duration: const Duration(milliseconds: 800),
+                curve: Curves.easeOutCubic,
+                scale: _isHovered ? 1.05 : 1.0,
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: widget.imageUrl.startsWith('http')
+                      ? Image.network(widget.imageUrl, fit: BoxFit.contain)
+                      : Image.asset(widget.imageUrl, fit: BoxFit.contain),
+                ),
+              ),
+              AnimatedOpacity(
+                duration: const Duration(milliseconds: 400),
+                opacity: _isHovered ? 0.2 : 0.0,
+                child: Container(color: Colors.black),
+              ),
+            ],
+          ),
+        );
 
         return MouseRegion(
           onEnter: (_) => setState(() => _isHovered = true),
@@ -667,30 +737,19 @@ class _CollectionCardState extends State<CollectionCard> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                width: double.infinity,
-                height: imageHeight,
-                child: Container(
-                  clipBehavior: Clip.antiAlias,
-                  decoration: const BoxDecoration(),
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      AnimatedScale(
-                        duration: const Duration(milliseconds: 800),
-                        curve: Curves.easeOutCubic,
-                        scale: _isHovered ? 1.05 : 1.0,
-                        child: Image.network(widget.imageUrl, fit: BoxFit.cover),
-                      ),
-                      AnimatedOpacity(
-                        duration: const Duration(milliseconds: 400),
-                        opacity: _isHovered ? 0.2 : 0.0,
-                        child: Container(color: Colors.black),
-                      ),
-                    ],
+              if (hasBoundedHeight)
+                Expanded(
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: AspectRatio(aspectRatio: 1, child: imageWidget),
                   ),
+                )
+              else
+                SizedBox(
+                  width: double.infinity,
+                  height: 320.0,
+                  child: AspectRatio(aspectRatio: 1, child: imageWidget),
                 ),
-              ),
               const SizedBox(height: 20),
               Text(
                 widget.title,
@@ -732,13 +791,13 @@ class TechnicalSpecsSection extends StatelessWidget {
             direction: isMobile ? Axis.vertical : Axis.horizontal,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(flex: isMobile ? 0 : 1, child: const SpecItem(number: '01', title: 'ULTRA NET CAM', desc: 'Yüksek ışık geçirgenliği ve sıfır renk distorsiyonu.')),
+              Expanded(flex: isMobile ? 0 : 1, child: const SpecItem(number: '01', title: 'ULTRA NET CAM', desc: 'Yuksek isik gecirgenligi ve sifir renk distorsiyonu.')),
               SizedBox(width: isMobile ? 0 : 48, height: isMobile ? 48 : 0),
-              Expanded(flex: isMobile ? 0 : 1, child: const SpecItem(number: '02', title: 'HASSAS KESİM', desc: 'CNC teknolojisi ile milimetrik doğrulukta üretim.')),
+              Expanded(flex: isMobile ? 0 : 1, child: const SpecItem(number: '02', title: 'HASSAS KESIM', desc: 'CNC teknolojisi ile milimetrik dogrulukta uretim.')),
               SizedBox(width: isMobile ? 0 : 48, height: isMobile ? 48 : 0),
-              Expanded(flex: isMobile ? 0 : 1, child: const SpecItem(number: '03', title: 'ÖZEL RODAJ', desc: 'Pürüzsüz ve estetik kenar bitişleri.')),
+              Expanded(flex: isMobile ? 0 : 1, child: const SpecItem(number: '03', title: 'OZEL RODAJ', desc: 'Puruzsuz ve estetik kenar bitisleri.')),
               SizedBox(width: isMobile ? 0 : 48, height: isMobile ? 48 : 0),
-              Expanded(flex: isMobile ? 0 : 1, child: const SpecItem(number: '04', title: 'EKOLOJİK ÜRETİM', desc: 'Çevre dostu gümüşleme ve kaplama süreçleri.')),
+              Expanded(flex: isMobile ? 0 : 1, child: const SpecItem(number: '04', title: 'EKOLOJIK URETIM', desc: 'Cevre dostu gumusleme ve kaplama surecleri.')),
             ],
           ),
         ),
@@ -783,13 +842,13 @@ class BrandStripSection extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'ZANAATIN BERRAKLIĞI',
+            'ZANAATIN BERRAKLIGI',
             textAlign: TextAlign.center,
             style: AppTextStyles.displayXl.copyWith(color: AppColors.textPrimary, letterSpacing: isMobile ? 2 : 8, fontSize: isMobile ? 32 : 80),
           ),
           const SizedBox(height: 32),
           Text(
-            'ARSLAN CAM AYNA ATÖLYESİ — 1988\'DEN BUGÜNE',
+            'ARSLAN CAM AYNA ATOLYESI - 1988\'DEN BUGUNE',
             textAlign: TextAlign.center,
             style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent, letterSpacing: 6),
           ),
@@ -828,10 +887,6 @@ class SiteFooter extends StatelessWidget {
                     onTap: () => launchUrl(Uri.parse('https://www.instagram.com/arslan_cam_ayna/')),
                     child: Text('INSTAGRAM', style: AppTextStyles.labelCaps),
                   ),
-                  const SizedBox(width: 32),
-                  Text('PINTEREST', style: AppTextStyles.labelCaps),
-                  const SizedBox(width: 32),
-                  Text('LINKEDIN', style: AppTextStyles.labelCaps),
                 ],
               )
             ],
@@ -841,8 +896,8 @@ class SiteFooter extends StatelessWidget {
             alignment: WrapAlignment.spaceBetween,
             runSpacing: 12,
             children: [
-              Text('© 2024 Tüm hakları saklıdır.', style: AppTextStyles.bodyMd.copyWith(fontSize: 12)),
-              Text('Tasarım & Geliştirme', style: AppTextStyles.bodyMd.copyWith(fontSize: 12)),
+              Text('(c) 2024 Tum haklari saklidir.', style: AppTextStyles.bodyMd.copyWith(fontSize: 12)),
+              Text('Tasarim & Gelistirme', style: AppTextStyles.bodyMd.copyWith(fontSize: 12)),
             ],
           )
         ],
@@ -850,4 +905,5 @@ class SiteFooter extends StatelessWidget {
     );
   }
 }
+
 
