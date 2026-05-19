@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'pages.dart';
 
@@ -349,8 +350,8 @@ class TopNavBar extends StatelessWidget {
                 onTap: () => context.go('/'),
                 child: Row(
                   children: [
-                    Image.asset(
-                      'assets/images/logo_lion.png',
+                    SvgPicture.asset(
+                      'assets/images/logo.svg',
                       width: mobile ? 30 : 38,
                       height: mobile ? 30 : 38,
                     ),
