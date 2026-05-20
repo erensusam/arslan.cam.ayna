@@ -27,3 +27,9 @@ Write-Host "Paylasim linkin hazir:" -ForegroundColor Green
 Write-Host $url -ForegroundColor Cyan
 Write-Host ""
 Write-Host "Not: Telefon tarayicisinda direkt bu linki ac."
+
+# Keep the script alive so child processes (python/ngrok) don't get terminated on exit
+while ($true) {
+    Start-Sleep -Seconds 10
+}
+

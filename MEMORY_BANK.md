@@ -1,4 +1,4 @@
-﻿# Memory Bank
+# Memory Bank
 
 ## Proje
 - Ad: ArslanCamAyna
@@ -101,3 +101,11 @@
 - `pubspec.lock` yeni bagimlilik cozumune gore yenilendi.
 - macOS plugin kaydi `sqflite_darwin` icin otomatik olarak guncellendi (`GeneratedPluginRegistrant.swift`).
 - Dogrulama: `flutter analyze` temiz.
+
+## IDE Kurtarma ve Tasarim Duzeltmeleri (2026-05-20)
+
+- Antigravity IDE yeniden kurulumu sonrasi Dart/Flutter eklentileri yuklenerek `launch.json` uyari/hata durumlari giderildi.
+- Web sayfasindaki responsive ust navbar (`TopNavBar`) yatay tasma hatasi (RenderFlex overflow) breakpoint 1150px'e cikarilarak ve paddingler dinamiklestirilerek cozuldu.
+- En guncel kodlarla `flutter build web --release` basariyla tamamlandi.
+- Python sunucusu ve ngrok paylasim tüneli `start-share.ps1` yardimiyla aktif edildi: https://reshoot-slept-railroad.ngrok-free.dev
+

@@ -1,0 +1,40 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Arslan Cam Ayna",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "Arslan Cam Ayna (Chrome - Web)",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "-d",
+                "chrome"
+            ]
+        },
+        {
+            "name": "Arslan Cam Ayna (Edge - Web)",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "-d",
+                "edge"
+            ]
+        },
+        {
+            "name": "Arslan Cam Ayna (Windows - Masaüstü)",
+            "request": "launch",
+            "type": "dart",
+            "args": [
+                "-d",
+                "windows"
+            ]
+        }
+    ]
+}

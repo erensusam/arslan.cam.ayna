@@ -1,4 +1,4 @@
-﻿import 'dart:ui';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
@@ -325,7 +325,8 @@ class TopNavBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final mobile = MediaQuery.of(context).size.width < 900;
+    final width = MediaQuery.of(context).size.width;
+    final mobile = width < 1150;
     // Get current path to highlight active nav link
     final currentPath = GoRouterState.of(context).uri.path;
     
@@ -334,7 +335,9 @@ class TopNavBar extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 20.0, sigmaY: 20.0),
         child: Container(
           height: mobile ? 80 : 96,
-          padding: EdgeInsets.symmetric(horizontal: mobile ? 16 : 64),
+          padding: EdgeInsets.symmetric(
+            horizontal: mobile ? 16.0 : (width < 1300 ? 24.0 : 64.0),
+          ),
           decoration: BoxDecoration(
             color: isScrolled ? AppColors.surface.withValues(alpha: 0.85) : Colors.transparent,
             border: Border(
@@ -431,8 +434,10 @@ class _NavLink extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final paddingLeft = width < 1300 ? 20.0 : 40.0;
     return Padding(
-      padding: const EdgeInsets.only(left: 48),
+      padding: EdgeInsets.only(left: paddingLeft),
       child: InkWell(
         onTap: onTap,
         hoverColor: Colors.transparent,
