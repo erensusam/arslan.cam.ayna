@@ -532,58 +532,63 @@ class _ProductDetailContentState extends State<ProductDetailContent> {
                         Container(
                           width: double.infinity,
                           decoration: BoxDecoration(border: Border.all(color: AppColors.outline)),
-                          child: activeImageUrl.startsWith('http')
-                              ? SizedBox(
-                                  height: isMobile ? 340 : 520,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12),
-                                    child: Image.network(activeImageUrl, fit: BoxFit.contain),
-                                  ),
-                                )
-                              : SizedBox(
-                                  height: isMobile ? 340 : 520,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(12),
-                                    child: Image.asset(activeImageUrl, fit: BoxFit.contain),
-                                  ),
-                                ),
+                          child: SizedBox(
+                            height: isMobile ? 360 : 540,
+                            child: activeImageUrl.startsWith('http')
+                                ? Image.network(activeImageUrl, fit: BoxFit.cover)
+                                : Image.asset(activeImageUrl, fit: BoxFit.cover),
+                          ),
                         ).animate().fade(delay: 200.ms),
                         const SizedBox(height: 24),
-                        // 4 Interactive preview thumbnails below the main image
-                        if (product.imageUrls.isNotEmpty)
-                          SizedBox(
-                            height: isMobile ? 80 : 100,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: product.imageUrls.length,
-                              itemBuilder: (context, index) {
-                                final url = product.imageUrls[index];
-                                final isSelected = index == _activeImageIndex;
-                                return GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      _activeImageIndex = index;
-                                    });
-                                  },
-                                  child: Container(
-                                    width: isMobile ? 80 : 100,
-                                    margin: const EdgeInsets.only(right: 16),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: isSelected ? AppColors.accent : AppColors.outline,
-                                        width: isSelected ? 2 : 1,
+                        // 3 Proportional Square thumbnails below the main image
+                        if (product.imageUrls.length >= 4)
+                          Builder(
+                            builder: (context) {
+                              final List<MapEntry<int, String>> inactiveImages = [];
+                              for (int i = 0; i < product.imageUrls.length; i++) {
+                                if (i != _activeImageIndex) {
+                                  inactiveImages.add(MapEntry(i, product.imageUrls[i]));
+                                }
+                              }
+                              final displayImages = inactiveImages.take(3).toList();
+
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: displayImages.asMap().entries.map((entry) {
+                                  final int index = entry.key;
+                                  final MapEntry<int, String> item = entry.value;
+                                  final int originalIndex = item.key;
+                                  final String url = item.value;
+
+                                  return Expanded(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                        left: index == 0 ? 0 : 8,
+                                        right: index == displayImages.length - 1 ? 0 : 8,
+                                      ),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            _activeImageIndex = originalIndex;
+                                          });
+                                        },
+                                        child: AspectRatio(
+                                          aspectRatio: 1.0,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.all(color: AppColors.outline),
+                                            ),
+                                            child: url.startsWith('http')
+                                                ? Image.network(url, fit: BoxFit.cover)
+                                                : Image.asset(url, fit: BoxFit.cover),
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(4),
-                                      child: url.startsWith('http')
-                                          ? Image.network(url, fit: BoxFit.cover)
-                                          : Image.asset(url, fit: BoxFit.cover),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
+                                  );
+                                }).toList(),
+                              );
+                            }
                           ).animate().fade(delay: 300.ms),
                       ],
                     ),
