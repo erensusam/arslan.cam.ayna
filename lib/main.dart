@@ -632,7 +632,7 @@ class CollectionsSection extends StatelessWidget {
                   child: const CollectionCard(
                     title: 'SAATLER',
                     subtitle: 'MODERN VE DEKORATIF',
-                    imageUrl: 'assets/images/6.png',
+                    imageUrl: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=800',
                   ),
                 ),
               ).animate().fade(delay: 400.ms).slideY(begin: 0.1),
@@ -663,7 +663,7 @@ class CollectionsSection extends StatelessWidget {
                     child: const CollectionCard(
                       title: 'SEHPALAR',
                       subtitle: 'MODERN TAMAMLAYICI',
-                      imageUrl: 'https://picsum.photos/seed/sehpa1/600/800',
+                      imageUrl: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800',
                     ),
                   ),
                 ),

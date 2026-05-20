@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -9,6 +9,7 @@ class ProductItem {
   final String title;
   final String category;
   final String imageUrl;
+  final List<String> imageUrls;
   final List<String> styleTags;
   final String description;
   const ProductItem({
@@ -16,6 +17,7 @@ class ProductItem {
     required this.title,
     required this.category,
     required this.imageUrl,
+    required this.imageUrls,
     this.styleTags = const [],
     this.description = '',
   });
@@ -29,6 +31,12 @@ final List<ProductItem> allProducts = [
     category: 'Aynalar',
     styleTags: ['Minimal', 'Modern'],
     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuAaQ2bpUSggNk7TdPNcdAEFHzAjoJ8__rC1VihCtRXv8rjs_2VWuweWxsbLZfmFdD5PQ91x2ax00DdMcfkkYMh_jzoT8SawYEOb93cAEziv6UwcDkUF5_OPKTd8y2nLHKOFrI015wt8xwa-bYY52y0TBZy-h3LSOjs49-7JVHhQBCt_RqbCX1xoyukvtKruiaWNIL03akeUpWnquiet1GstwWXlI4llxbOSSW5focrx49ASNPM9DGke6PW_cMsxTWerwE8H-G1RGYI',
+    imageUrls: [
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuAaQ2bpUSggNk7TdPNcdAEFHzAjoJ8__rC1VihCtRXv8rjs_2VWuweWxsbLZfmFdD5PQ91x2ax00DdMcfkkYMh_jzoT8SawYEOb93cAEziv6UwcDkUF5_OPKTd8y2nLHKOFrI015wt8xwa-bYY52y0TBZy-h3LSOjs49-7JVHhQBCt_RqbCX1xoyukvtKruiaWNIL03akeUpWnquiet1GstwWXlI4llxbOSSW5focrx49ASNPM9DGke6PW_cMsxTWerwE8H-G1RGYI',
+      'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800',
+      'https://images.unsplash.com/photo-1581428982868-e410dd047a90?q=80&w=800',
+      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=800',
+    ],
   ),
   const ProductItem(
     id: 'a2',
@@ -36,6 +44,12 @@ final List<ProductItem> allProducts = [
     category: 'Aynalar',
     styleTags: ['Luxury', 'Modern'],
     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD0vY5-R_eMzt2s9Lx-7YHe3Io11GvQXVWjK9Z5tsK4ujKzZLDgs4VVr2wwg7UrWBvBFgfD-hU-hN4a-DjZwzayJznGwFJqGYKr-DZ2IrtID_MwqHs1xi1MwK9Py5CqeCXvoNbVoDpJrbYokgt8NkXCsIWCgG24RCBHYhy7BPX1ikoW8YIoMxXAF7DrGQguz7acfRgRPn9LPZ2Pb5G0kzFZyypEgUUAz1FdimLzw3yDdx8GwzsgS8OgD9n61kjZ-p2QEZiRP_8N-qU',
+    imageUrls: [
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuD0vY5-R_eMzt2s9Lx-7YHe3Io11GvQXVWjK9Z5tsK4ujKzZLDgs4VVr2wwg7UrWBvBFgfD-hU-hN4a-DjZwzayJznGwFJqGYKr-DZ2IrtID_MwqHs1xi1MwK9Py5CqeCXvoNbVoDpJrbYokgt8NkXCsIWCgG24RCBHYhy7BPX1ikoW8YIoMxXAF7DrGQguz7acfRgRPn9LPZ2Pb5G0kzFZyypEgUUAz1FdimLzw3yDdx8GwzsgS8OgD9n61kjZ-p2QEZiRP_8N-qU',
+      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=800',
+      'https://images.unsplash.com/photo-1581428982868-e410dd047a90?q=80&w=800',
+      'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800',
+    ],
   ),
   const ProductItem(
     id: 'a3',
@@ -43,17 +57,53 @@ final List<ProductItem> allProducts = [
     category: 'Aynalar',
     styleTags: ['Vintage', 'Classic'],
     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDKcyVShv4VHFDlopj7bJfQjD0RvXQktsJpolKZ3ZAGmAksy7Tr8kVWTO5SbcmOVuEB1jBtijPusOAajg0A6PAx7iMwvwFnug-nRWb7NJaVb7z3Z7CUehB5udSTehaQCWFSz0wGHFXTabXprQm6jgswjwtx1Yfv2wmDeLxj9T6UJlT5gJQXbtJgf7qnOXwYAhxQ6Pu2n5Moix61jcarIb3T1_yED5WZYGTj0RaTjYmzK9xd9YX2c0qohFjQYVgalZ2UUAoCSix6_iE',
+    imageUrls: [
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuDKcyVShv4VHFDlopj7bJfQjD0RvXQktsJpolKZ3ZAGmAksy7Tr8kVWTO5SbcmOVuEB1jBtijPusOAajg0A6PAx7iMwvwFnug-nRWb7NJaVb7z3Z7CUehB5udSTehaQCWFSz0wGHFXTabXprQm6jgswjwtx1Yfv2wmDeLxj9T6UJlT5gJQXbtJgf7qnOXwYAhxQ6Pu2n5Moix61jcarIb3T1_yED5WZYGTj0RaTjYmzK9xd9YX2c0qohFjQYVgalZ2UUAoCSix6_iE',
+      'https://images.unsplash.com/photo-1581428982868-e410dd047a90?q=80&w=800',
+      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=800',
+      'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800',
+    ],
   ),
-  const ProductItem(id: 'a4', title: 'ELIPS MODERN AYNA', category: 'Aynalar', styleTags: ['Oval Collection'], imageUrl: 'https://picsum.photos/seed/ayna4/600/800'),
-  const ProductItem(id: 'a5', title: 'CERCEVESIZ SALON AYNASI', category: 'Aynalar', styleTags: ['Minimal'], imageUrl: 'https://picsum.photos/seed/ayna5/600/800'),
+  const ProductItem(
+    id: 'a4',
+    title: 'ELIPS MODERN AYNA',
+    category: 'Aynalar',
+    styleTags: ['Oval Collection'],
+    imageUrl: 'https://picsum.photos/seed/ayna4/600/800',
+    imageUrls: [
+      'https://picsum.photos/seed/ayna4/600/800',
+      'https://images.unsplash.com/photo-1581428982868-e410dd047a90?q=80&w=800',
+      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=800',
+      'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800',
+    ],
+  ),
+  const ProductItem(
+    id: 'a5',
+    title: 'CERCEVESIZ SALON AYNASI',
+    category: 'Aynalar',
+    styleTags: ['Minimal'],
+    imageUrl: 'https://picsum.photos/seed/ayna5/600/800',
+    imageUrls: [
+      'https://picsum.photos/seed/ayna5/600/800',
+      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=800',
+      'https://images.unsplash.com/photo-1581428982868-e410dd047a90?q=80&w=800',
+      'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800',
+    ],
+  ),
 
-    // --- TABLOLAR ---
+  // --- TABLOLAR ---
   const ProductItem(
     id: 'c1',
     title: 'YASAM AGACI DEKORATIF TABLO',
     category: 'Tablolar',
     styleTags: ['Sanatsal', 'Renkli', 'Modern'],
     imageUrl: 'assets/images/tablo_1.png',
+    imageUrls: [
+      'assets/images/tablo_1.png',
+      'assets/images/tablo_2.png',
+      'assets/images/tablo_3.png',
+      'assets/images/tablo_4.png',
+    ],
     description: 'Canli renk gecisleri ve koklerden tepeye uzanan kompozisyonuyla yasam enerjisini mekana tasiyan modern dekoratif tablo.',
   ),
   const ProductItem(
@@ -62,6 +112,12 @@ final List<ProductItem> allProducts = [
     category: 'Tablolar',
     styleTags: ['Luks', 'Klasik', 'Elegant', 'Modern'],
     imageUrl: 'assets/images/tablo_2.png',
+    imageUrls: [
+      'assets/images/tablo_2.png',
+      'assets/images/tablo_1.png',
+      'assets/images/tablo_3.png',
+      'assets/images/tablo_4.png',
+    ],
     description: 'Inci beyazi dokular ve mavi detaylarla zenginlesen tavus kusu temasi, salonda odak noktasi olusturan premium bir tasarim sunar.',
   ),
   const ProductItem(
@@ -70,6 +126,12 @@ final List<ProductItem> allProducts = [
     category: 'Tablolar',
     styleTags: ['Romantik', 'Sanatsal', 'Modern'],
     imageUrl: 'assets/images/tablo_3.png',
+    imageUrls: [
+      'assets/images/tablo_3.png',
+      'assets/images/tablo_1.png',
+      'assets/images/tablo_2.png',
+      'assets/images/tablo_4.png',
+    ],
     description: 'Narin kelebek formu ile mavi gul detaylarini birlestiren bu kompozisyon, duvara zarif ve etkileyici bir karakter kazandirir.',
   ),
   const ProductItem(
@@ -78,6 +140,12 @@ final List<ProductItem> allProducts = [
     category: 'Tablolar',
     styleTags: ['Soyut', 'Geometrik', 'Luks', 'Modern'],
     imageUrl: 'assets/images/tablo_4.png',
+    imageUrls: [
+      'assets/images/tablo_4.png',
+      'assets/images/tablo_1.png',
+      'assets/images/tablo_2.png',
+      'assets/images/tablo_3.png',
+    ],
     description: 'Altin tonlu geometrik katmanlar ve aydinlik yansimalarla tasarlanan soyut form, modern ic mekanlara derinlik katar.',
   ),
   const ProductItem(
@@ -86,8 +154,15 @@ final List<ProductItem> allProducts = [
     category: 'Tablolar',
     styleTags: ['Cicek', 'Zarif', 'Modern'],
     imageUrl: 'assets/images/tablo_5.png',
+    imageUrls: [
+      'assets/images/tablo_5.png',
+      'assets/images/tablo_1.png',
+      'assets/images/tablo_2.png',
+      'assets/images/tablo_3.png',
+    ],
     description: 'Metalik mavi ve gumus gecisleriyle bicimlenen cicek kompozisyonu, rafine bir gorunumu guclu bir sanat diliyle bulusturur.',
   ),
+
   // --- DRESUARLAR ---
   const ProductItem(
     id: 'd1',
@@ -95,9 +170,99 @@ final List<ProductItem> allProducts = [
     category: 'Dresuarlar',
     styleTags: ['Luxury', 'Modern'],
     imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD33_TJUZ2dFUZFiMuWof32yMnpt6S0AIvcvZlB8qkSLi02ApSz00_6ZRfUYedp3_5Oc7CTgp4ACu1uCYl1Sx2cFXIjaRGCQvZesSAsBdOT6aV6gvnr0WW7UMzIcfAxXcr46sG8lvrUDSPgtMTrYrSFjaohhQAO574tmUaEpZGTq710BsPhitfgtCEexFqYvwfJvRjx3usLVlELFc_B1XXOKvUEPj66JHF5cQ9ro26W45Srceu9YE2uj71n8lz50_Z4VhExPEkL54c',
+    imageUrls: [
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuD33_TJUZ2dFUZFiMuWof32yMnpt6S0AIvcvZlB8qkSLi02ApSz00_6ZRfUYedp3_5Oc7CTgp4ACu1uCYl1Sx2cFXIjaRGCQvZesSAsBdOT6aV6gvnr0WW7UMzIcfAxXcr46sG8lvrUDSPgtMTrYrSFjaohhQAO574tmUaEpZGTq710BsPhitfgtCEexFqYvwfJvRjx3usLVlELFc_B1XXOKvUEPj66JHF5cQ9ro26W45Srceu9YE2uj71n8lz50_Z4VhExPEkL54c',
+      'https://images.unsplash.com/photo-1581428982868-e410dd047a90?q=80&w=800',
+      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=800',
+      'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800',
+    ],
   ),
-  const ProductItem(id: 'd2', title: 'GOLD AYAKLI CAM DRESUAR', category: 'Dresuarlar', styleTags: ['Gold Details', 'Luxury'], imageUrl: 'https://picsum.photos/seed/dresuar2/600/800'),
-  const ProductItem(id: 'd3', title: 'SIYAH PROFIL DRESUAR', category: 'Dresuarlar', styleTags: ['Black Frame', 'Minimal'], imageUrl: 'https://picsum.photos/seed/dresuar3/600/800'),
+  const ProductItem(
+    id: 'd2',
+    title: 'GOLD AYAKLI CAM DRESUAR',
+    category: 'Dresuarlar',
+    styleTags: ['Gold Details', 'Luxury'],
+    imageUrl: 'https://picsum.photos/seed/dresuar2/600/800',
+    imageUrls: [
+      'https://picsum.photos/seed/dresuar2/600/800',
+      'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800',
+      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=800',
+      'https://images.unsplash.com/photo-1581428982868-e410dd047a90?q=80&w=800',
+    ],
+  ),
+  const ProductItem(
+    id: 'd3',
+    title: 'SIYAH PROFIL DRESUAR',
+    category: 'Dresuarlar',
+    styleTags: ['Black Frame', 'Minimal'],
+    imageUrl: 'https://picsum.photos/seed/dresuar3/600/800',
+    imageUrls: [
+      'https://picsum.photos/seed/dresuar3/600/800',
+      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=800',
+      'https://images.unsplash.com/photo-1581428982868-e410dd047a90?q=80&w=800',
+      'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800',
+    ],
+  ),
+
+  // --- SAATLER ---
+  const ProductItem(
+    id: 's1',
+    title: 'AYNALI MODERN DUVAR SAATI',
+    category: 'Saatler',
+    styleTags: ['Minimal', 'Modern'],
+    imageUrl: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=800',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=800',
+      'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=800',
+      'https://images.unsplash.com/photo-1581428982868-e410dd047a90?q=80&w=800',
+      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=800',
+    ],
+    description: 'Yansitici ayna yuzeyi ve son derece şık minimalist metal akrep-yelkovani ile zamani estetikle bulusturan premium duvar saati.',
+  ),
+  const ProductItem(
+    id: 's2',
+    title: 'ALTIN RAKAMLI YUVARLAK SAAT',
+    category: 'Saatler',
+    styleTags: ['Luxury', 'Classic'],
+    imageUrl: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=800',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=800',
+      'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=800',
+      'https://images.unsplash.com/photo-1581428982868-e410dd047a90?q=80&w=800',
+      'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800',
+    ],
+    description: 'Gold detaylari ve el isciligi eskitme ayna kaplamasiyla klasik ve modern mekanlara luks bir hava katan duvar saati.',
+  ),
+
+  // --- SEHPALAR ---
+  const ProductItem(
+    id: 'se1',
+    title: 'GOLD DETAYLI ZARIF ORTA SEHPA',
+    category: 'Sehpalar',
+    styleTags: ['Luxury', 'Modern'],
+    imageUrl: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800',
+      'https://images.unsplash.com/photo-1581428982868-e410dd047a90?q=80&w=800',
+      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=800',
+      'https://images.unsplash.com/photo-1581428982868-e410dd047a90?q=80&w=800',
+    ],
+    description: 'Isigin kirilma acilarini maksimize eden pirinc gold detayli modern cam orta sehpa ile oturma odanizda luks bir odak noktasi.',
+  ),
+  const ProductItem(
+    id: 'se2',
+    title: 'MINIMALIST CAM YAN SEHPA',
+    category: 'Sehpalar',
+    styleTags: ['Minimal', 'Modern'],
+    imageUrl: 'https://images.unsplash.com/photo-1581428982868-e410dd047a90?q=80&w=800',
+    imageUrls: [
+      'https://images.unsplash.com/photo-1581428982868-e410dd047a90?q=80&w=800',
+      'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800',
+      'https://images.unsplash.com/photo-1581428982868-e410dd047a90?q=80&w=800',
+      'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=800',
+    ],
+    description: 'Yalın cizgileri ve ultra berrak temperli cam tablası ile hem sehpa hem de sanatsal bir dekoratif stand olarak kullanilabilen minimalist yan sehpa.',
+  ),
 ];
 
 class CatalogContent extends StatefulWidget {
@@ -283,9 +448,16 @@ class _CatalogContentState extends State<CatalogContent> {
   }
 }
 
-class ProductDetailContent extends StatelessWidget {
+class ProductDetailContent extends StatefulWidget {
   final String productId;
   const ProductDetailContent({super.key, required this.productId});
+
+  @override
+  State<ProductDetailContent> createState() => _ProductDetailContentState();
+}
+
+class _ProductDetailContentState extends State<ProductDetailContent> {
+  int _activeImageIndex = 0;
 
   Widget _buildTechRow(String label, String value) {
     return Container(
@@ -309,7 +481,12 @@ class ProductDetailContent extends StatelessWidget {
     final isMobile = w < 800;
     
     // Find product or default to first
-    final product = allProducts.firstWhere((p) => p.id == productId, orElse: () => allProducts.first);
+    final product = allProducts.firstWhere((p) => p.id == widget.productId, orElse: () => allProducts.first);
+
+    // Get active image
+    final String activeImageUrl = (product.imageUrls.isNotEmpty && _activeImageIndex < product.imageUrls.length)
+        ? product.imageUrls[_activeImageIndex]
+        : product.imageUrl;
 
     return SingleChildScrollView(
       child: Container(
@@ -355,22 +532,59 @@ class ProductDetailContent extends StatelessWidget {
                         Container(
                           width: double.infinity,
                           decoration: BoxDecoration(border: Border.all(color: AppColors.outline)),
-                          child: product.imageUrl.startsWith('http')
+                          child: activeImageUrl.startsWith('http')
                               ? SizedBox(
                                   height: isMobile ? 340 : 520,
                                   child: Padding(
                                     padding: const EdgeInsets.all(12),
-                                    child: Image.network(product.imageUrl, fit: BoxFit.contain),
+                                    child: Image.network(activeImageUrl, fit: BoxFit.contain),
                                   ),
                                 )
                               : SizedBox(
                                   height: isMobile ? 340 : 520,
                                   child: Padding(
                                     padding: const EdgeInsets.all(12),
-                                    child: Image.asset(product.imageUrl, fit: BoxFit.contain),
+                                    child: Image.asset(activeImageUrl, fit: BoxFit.contain),
                                   ),
                                 ),
                         ).animate().fade(delay: 200.ms),
+                        const SizedBox(height: 24),
+                        // 4 Interactive preview thumbnails below the main image
+                        if (product.imageUrls.isNotEmpty)
+                          SizedBox(
+                            height: isMobile ? 80 : 100,
+                            child: ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: product.imageUrls.length,
+                              itemBuilder: (context, index) {
+                                final url = product.imageUrls[index];
+                                final isSelected = index == _activeImageIndex;
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _activeImageIndex = index;
+                                    });
+                                  },
+                                  child: Container(
+                                    width: isMobile ? 80 : 100,
+                                    margin: const EdgeInsets.only(right: 16),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: isSelected ? AppColors.accent : AppColors.outline,
+                                        width: isSelected ? 2 : 1,
+                                      ),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(4),
+                                      child: url.startsWith('http')
+                                          ? Image.network(url, fit: BoxFit.cover)
+                                          : Image.asset(url, fit: BoxFit.cover),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ).animate().fade(delay: 300.ms),
                       ],
                     ),
                   ),
@@ -514,7 +728,7 @@ class AboutContent extends StatelessWidget {
                     child: Container(
                       height: isMobile ? 320 : 460,
                       decoration: BoxDecoration(border: Border.all(color: AppColors.outline)),
-                      child: Image.asset('assets/images/4.png', fit: BoxFit.cover),
+                      child: Image.network('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=800', fit: BoxFit.cover),
                     ),
                   ),
                   SizedBox(width: isMobile ? 0 : 24, height: isMobile ? 24 : 0),
@@ -523,7 +737,7 @@ class AboutContent extends StatelessWidget {
                     child: Container(
                       height: isMobile ? 220 : 300,
                       decoration: BoxDecoration(border: Border.all(color: AppColors.outline)),
-                      child: Image.asset('assets/images/2.png', fit: BoxFit.cover),
+                      child: Image.network('https://images.unsplash.com/photo-1581428982868-e410dd047a90?q=80&w=800', fit: BoxFit.cover),
                     ),
                   ),
                 ],
