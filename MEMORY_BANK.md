@@ -109,3 +109,7 @@
 - En guncel kodlarla `flutter build web --release` basariyla tamamlandi.
 - Python sunucusu ve ngrok paylasim tüneli `start-share.ps1` yardimiyla aktif edildi: https://reshoot-slept-railroad.ngrok-free.dev
 
+## Calisma Kurallari (2026-05-21)
+
+- **Kritik Kural**: Kullanici acikça komut vermedigi surece ngrok tüneli güncellenmeyecek ve `MEMORY_BANK.md` guncellenmeyecektir.
+- **Kritik Kural**: Kullanici acikça söylemedigi surece hicbir Git islemi (add, commit, push vb.) yapilmayacaktir.

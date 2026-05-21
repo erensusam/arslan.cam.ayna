@@ -636,7 +636,7 @@ class CollectionsSection extends StatelessWidget {
                   ),
                 ),
               ).animate().fade(delay: 400.ms).slideY(begin: 0.1),
-              SizedBox(width: isMobile ? 0 : 48, height: isMobile ? 64 : 0),
+              SizedBox(width: isMobile ? 0 : 32, height: isMobile ? 64 : 0),
               Flexible(
                 flex: isMobile ? 0 : 1,
                 fit: isMobile ? FlexFit.loose : FlexFit.tight,
@@ -652,35 +652,48 @@ class CollectionsSection extends StatelessWidget {
                   ),
                 ),
               ).animate().fade(delay: 500.ms).slideY(begin: 0.1),
-              SizedBox(width: isMobile ? 0 : 48, height: isMobile ? 64 : 0),
+              SizedBox(width: isMobile ? 0 : 32, height: isMobile ? 64 : 0),
               Flexible(
                 flex: isMobile ? 0 : 1,
                 fit: isMobile ? FlexFit.loose : FlexFit.tight,
                 child: GestureDetector(
                   onTap: () => context.go('/katalog/sehpalar'),
-                  child: Padding(
-                    padding: EdgeInsets.only(top: isMobile ? 0 : 80),
-                    child: const CollectionCard(
-                      title: 'SEHPALAR',
-                      subtitle: 'MODERN TAMAMLAYICI',
-                      imageUrl: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800',
-                    ),
+                  child: const CollectionCard(
+                    title: 'SEHPALAR',
+                    subtitle: 'MODERN TAMAMLAYICI',
+                    imageUrl: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?q=80&w=800',
                   ),
                 ),
               ).animate().fade(delay: 550.ms).slideY(begin: 0.1),
-              SizedBox(width: isMobile ? 0 : 48, height: isMobile ? 64 : 0),
+              SizedBox(width: isMobile ? 0 : 32, height: isMobile ? 64 : 0),
               Flexible(
                 flex: isMobile ? 0 : 1,
                 fit: isMobile ? FlexFit.loose : FlexFit.tight,
                 child: GestureDetector(
                   onTap: () => context.go('/katalog/dresuarlar'),
-                  child: const CollectionCard(
-                    title: 'DRESUARLAR',
-                    subtitle: 'LUKS TAMAMLAYICI PARCALAR',
-                    imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD33_TJUZ2dFUZFiMuWof32yMnpt6S0AIvcvZlB8qkSLi02ApSz00_6ZRfUYedp3_5Oc7CTgp4ACu1uCYl1Sx2cFXIjaRGCQvZesSAsBdOT6aV6gvnr0WW7UMzIcfAxXcr46sG8lvrUDSPgtMTrYrSFjaohhQAO574tmUaEpZGTq710BsPhitfgtCEexFqYvwfJvRjx3usLVlELFc_B1XXOKvUEPj66JHF5cQ9ro26W45Srceu9YE2uj71n8lz50_Z4VhExPEkL54c',
+                  child: Padding(
+                    padding: EdgeInsets.only(top: isMobile ? 0 : 80),
+                    child: const CollectionCard(
+                      title: 'DRESUARLAR',
+                      subtitle: 'LUKS TAMAMLAYICI PARCALAR',
+                      imageUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD33_TJUZ2dFUZFiMuWof32yMnpt6S0AIvcvZlB8qkSLi02ApSz00_6ZRfUYedp3_5Oc7CTgp4ACu1uCYl1Sx2cFXIjaRGCQvZesSAsBdOT6aV6gvnr0WW7UMzIcfAxXcr46sG8lvrUDSPgtMTrYrSFjaohhQAO574tmUaEpZGTq710BsPhitfgtCEexFqYvwfJvRjx3usLVlELFc_B1XXOKvUEPj66JHF5cQ9ro26W45Srceu9YE2uj71n8lz50_Z4VhExPEkL54c',
+                    ),
                   ),
                 ),
               ).animate().fade(delay: 600.ms).slideY(begin: 0.1),
+              SizedBox(width: isMobile ? 0 : 32, height: isMobile ? 64 : 0),
+              Flexible(
+                flex: isMobile ? 0 : 1,
+                fit: isMobile ? FlexFit.loose : FlexFit.tight,
+                child: GestureDetector(
+                  onTap: () => context.go('/katalog/tablolar'),
+                  child: const CollectionCard(
+                    title: 'TABLOLAR',
+                    subtitle: 'LUKS CAM TASARIMLAR',
+                    imageUrl: 'assets/images/kelebek_tablo_1.jpg',
+                  ),
+                ),
+              ).animate().fade(delay: 650.ms).slideY(begin: 0.1),
             ],
           ),
         ],

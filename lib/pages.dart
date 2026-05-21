@@ -169,10 +169,9 @@ final List<ProductItem> allProducts = [
     styleTags: ['Aynalı Çerçeve', 'Lüks', 'Kelebek', 'Gold Detay', 'Modern'],
     imageUrl: 'assets/images/kelebek_tablo_1.jpg',
     imageUrls: [
-      'assets/images/kelebek_tablo_1.jpg',
       'assets/images/kelebek_tablo_2.jpg',
+      'assets/images/kelebek_tablo_1.jpg',
       'assets/images/kelebek_tablo_3.jpg',
-      'assets/images/kelebek_tablo_4.jpg',
     ],
     description: 'Premium eskitme ayna cerceve icerisinde yer alan, zarif gold konturlere sahip el yapimi kabartmali kelebek formlari ile yasam alanlariniza derinlik ve sonsuz zerafet katan modern triptik (uc parcali) cam tablo tasarimi.',
   ),
@@ -306,18 +305,13 @@ class _CatalogContentState extends State<CatalogContent> {
 
     var filteredItems = allProducts.where((p) => p.category.toLowerCase() == widget.category.toLowerCase()).toList();
     
-    // Extract unique styles
+    // Extract unique styles dynamically for all categories
     Set<String> allStyles = {'Tum'};
-    if (widget.category.toLowerCase() == 'tablolar') {
-      allStyles = {'Modern'};
-      filteredItems = filteredItems.where((p) => p.styleTags.contains('Modern')).toList();
-    } else {
-      for (var item in filteredItems) {
-        allStyles.addAll(item.styleTags);
-      }
+    for (var item in filteredItems) {
+      allStyles.addAll(item.styleTags);
     }
 
-    if (_selectedStyle != 'Tum' && widget.category.toLowerCase() != 'tablolar') {
+    if (_selectedStyle != 'Tum') {
       filteredItems = filteredItems.where((p) => p.styleTags.contains(_selectedStyle)).toList();
     }
 
@@ -359,35 +353,10 @@ class _CatalogContentState extends State<CatalogContent> {
               const SizedBox(height: 24),
               Text(displayCategory, style: AppTextStyles.headlineLg.copyWith(fontSize: isMobile ? 48 : 80, fontWeight: FontWeight.w200))
                 .animate().fade(delay: 200.ms).slideY(begin: 0.2),
-              if (widget.category.toLowerCase() == 'tablolar') const SizedBox(height: 20),
-              if (widget.category.toLowerCase() == 'tablolar')
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    InkWell(
-                      onTap: () => context.go('/'),
-                      child: Text('Anasayfa', style: AppTextStyles.bodyMd.copyWith(color: AppColors.textPrimary)),
-                    ),
-                    const SizedBox(width: 8),
-                    const Icon(Icons.chevron_right, size: 16, color: AppColors.textSecondary),
-                    const SizedBox(width: 8),
-                    InkWell(
-                      onTap: () => context.go('/katalog/tablolar'),
-                      child: Text('Tablolar', style: AppTextStyles.bodyMd),
-                    ),
-                    const SizedBox(width: 8),
-                    const Icon(Icons.chevron_right, size: 16, color: AppColors.textSecondary),
-                    const SizedBox(width: 8),
-                    InkWell(
-                      onTap: () => setState(() => _selectedStyle = 'Modern'),
-                      child: Text('Modern', style: AppTextStyles.bodyMd.copyWith(color: AppColors.accent)),
-                    ),
-                  ],
-                ).animate().fade().slideY(begin: 0.2),
               
               const SizedBox(height: 64),
               
-              // Style Based Discovery System
+              // Style Based Discovery System - Completely dynamic for all categories
               if (allStyles.isNotEmpty)
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -402,7 +371,7 @@ class _CatalogContentState extends State<CatalogContent> {
                           decoration: BoxDecoration(
                             border: Border(
                               bottom: BorderSide(
-                                color: (widget.category.toLowerCase() == 'tablolar' ? style == 'Modern' : _selectedStyle == style)
+                                color: _selectedStyle == style
                                     ? AppColors.accent
                                     : Colors.transparent,
                                 width: 1,
@@ -412,7 +381,7 @@ class _CatalogContentState extends State<CatalogContent> {
                           child: Text(
                             style,
                             style: AppTextStyles.labelCaps.copyWith(
-                              color: (widget.category.toLowerCase() == 'tablolar' ? style == 'Modern' : _selectedStyle == style)
+                              color: _selectedStyle == style
                                   ? AppColors.accent
                                   : AppColors.textSecondary,
                               letterSpacing: 2.0,
@@ -472,18 +441,57 @@ class ProductDetailContent extends StatefulWidget {
 
 class _ProductDetailContentState extends State<ProductDetailContent> {
   int _activeImageIndex = 0;
+  bool _isHovered = false;
+  Offset? _mousePosition;
+
+  @override
+  void initState() {
+    super.initState();
+    _initActiveImage();
+  }
+
+  @override
+  void didUpdateWidget(covariant ProductDetailContent oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.productId != widget.productId) {
+      _initActiveImage();
+    }
+  }
+
+  void _initActiveImage() {
+    final product = allProducts.firstWhere((p) => p.id == widget.productId, orElse: () => allProducts.first);
+    final index = product.imageUrls.indexOf(product.imageUrl);
+    setState(() {
+      _activeImageIndex = index != -1 ? index : 0;
+    });
+  }
 
   Widget _buildTechRow(String label, String value) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 24),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(color: AppColors.outline, width: 1)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(child: Text(label, style: AppTextStyles.labelCaps.copyWith(color: AppColors.textSecondary))),
-          Text(value, style: AppTextStyles.bodyMd.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w400)),
+          Expanded(
+            child: Text(
+              label,
+              style: AppTextStyles.labelCaps.copyWith(
+                color: AppColors.textSecondary,
+                fontSize: 10.5,
+              ),
+            ),
+          ),
+          Text(
+            value,
+            style: AppTextStyles.bodyMd.copyWith(
+              color: AppColors.textPrimary,
+              fontWeight: FontWeight.w400,
+              fontSize: 13,
+            ),
+          ),
         ],
       ),
     );
@@ -492,7 +500,11 @@ class _ProductDetailContentState extends State<ProductDetailContent> {
   @override
   Widget build(BuildContext context) {
     final w = MediaQuery.of(context).size.width;
+    final h = MediaQuery.of(context).size.height;
     final isMobile = w < 800;
+    
+    // Dynamic height of the main image on desktop to fit the screen viewport beautifully
+    final double mainImageHeight = isMobile ? 280 : (h * 0.38).clamp(280.0, 390.0);
     
     // Find product or default to first
     final product = allProducts.firstWhere((p) => p.id == widget.productId, orElse: () => allProducts.first);
@@ -511,158 +523,391 @@ class _ProductDetailContentState extends State<ProductDetailContent> {
           padding: EdgeInsets.only(
             left: isMobile ? 32 : 120,
             right: isMobile ? 32 : 120,
-            top: 160,
+            top: isMobile ? 120 : 116,
             bottom: 120,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Premium Product Layout
-              Flex(
-                direction: isMobile ? Axis.vertical : Axis.horizontal,
-                crossAxisAlignment: CrossAxisAlignment.start,
+              // Breadcrumbs at the top of the entire page content
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
                 children: [
-                  // Image Section
-                  Expanded(
-                    flex: isMobile ? 0 : 6,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            InkWell(
-                              onTap: () => context.go('/'),
-                              child: Text('KOLEKSIYONLAR', style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent)),
-                            ),
-                            Text(' > ', style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent)),
-                            InkWell(
-                              onTap: () => context.go('/katalog/${product.category.toLowerCase()}'),
-                              child: Text(product.category.toUpperCase(), style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent)),
-                            ),
-                          ],
-                        ).animate().fade().slideY(),
-                        const SizedBox(height: 32),
-                        Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(border: Border.all(color: AppColors.outline)),
-                          child: SizedBox(
-                            height: isMobile ? 360 : 540,
-                            child: activeImageUrl.startsWith('http')
-                                ? Image.network(activeImageUrl, fit: BoxFit.cover)
-                                : Image.asset(activeImageUrl, fit: BoxFit.cover),
-                          ),
-                        ).animate().fade(delay: 200.ms),
-                        const SizedBox(height: 24),
-                        // 3 Proportional Square thumbnails below the main image
-                        if (product.imageUrls.length >= 4)
-                          Builder(
-                            builder: (context) {
-                              final List<MapEntry<int, String>> inactiveImages = [];
-                              for (int i = 0; i < product.imageUrls.length; i++) {
-                                if (i != _activeImageIndex) {
-                                  inactiveImages.add(MapEntry(i, product.imageUrls[i]));
-                                }
-                              }
-                              final displayImages = inactiveImages.take(3).toList();
-
-                              return Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: displayImages.asMap().entries.map((entry) {
-                                  final int index = entry.key;
-                                  final MapEntry<int, String> item = entry.value;
-                                  final int originalIndex = item.key;
-                                  final String url = item.value;
-
-                                  return Expanded(
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                        left: index == 0 ? 0 : 8,
-                                        right: index == displayImages.length - 1 ? 0 : 8,
-                                      ),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            _activeImageIndex = originalIndex;
-                                          });
-                                        },
-                                        child: AspectRatio(
-                                          aspectRatio: 1.0,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              border: Border.all(color: AppColors.outline),
-                                            ),
-                                            child: url.startsWith('http')
-                                                ? Image.network(url, fit: BoxFit.cover)
-                                                : Image.asset(url, fit: BoxFit.cover),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                              );
-                            }
-                          ).animate().fade(delay: 300.ms),
-                      ],
+                  InkWell(
+                    onTap: () => context.go('/'),
+                    child: Text(
+                      'KOLEKSIYONLAR',
+                      style: AppTextStyles.labelCaps.copyWith(
+                        color: AppColors.accent,
+                        fontSize: isMobile ? 10.5 : 11,
+                      ),
                     ),
                   ),
-                  SizedBox(width: isMobile ? 0 : 80, height: isMobile ? 64 : 0),
-                  
-                  // Details Section
-                  Expanded(
-                    flex: isMobile ? 0 : 5,
-                    child: Padding(
-                      padding: EdgeInsets.only(top: isMobile ? 0 : 64),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(product.title, style: AppTextStyles.headlineLg.copyWith(fontSize: isMobile ? 48 : 64, height: 1.1, fontWeight: FontWeight.w200))
-                            .animate().fade(delay: 300.ms).slideY(),
-                          const SizedBox(height: 48),
-                          Text(
-                            product.description.isNotEmpty
-                                ? product.description
-                                : 'Geleneksel cam isleme sanatinin modern mimariyle bulustugu nokta. Bu seri, seffafligin ve yansimanin en saf halini yasam alanlariniza tasiyor. El isciligiyle hazirlanan kenar detaylari ve ustun cam kalitesiyle zamansiz bir parca.',
-                            style: AppTextStyles.bodyLg,
-                          ).animate().fade(delay: 400.ms),
-                          const SizedBox(height: 80),
-                          
-                          Text('TEKNIK OZELLIKLER', style: AppTextStyles.labelCaps.copyWith(color: AppColors.textPrimary)),
-                          const SizedBox(height: 16),
-                          Container(height: 1, color: AppColors.outline),
-                          _buildTechRow('MALZEME', 'Ekstra Berrak Flotal Ayna').animate().fade(delay: 500.ms),
-                          _buildTechRow('STANDART BOYUT', '120cm x 40cm x 85cm').animate().fade(delay: 550.ms),
-                          _buildTechRow('YUZEY ISLEMI', 'Bizote & Polisaj').animate().fade(delay: 600.ms),
-                          _buildTechRow('TASIMA KAPASITESI', '45 kg').animate().fade(delay: 650.ms),
-                          
-                          const SizedBox(height: 80),
-                          Wrap(
-                            spacing: 16,
-                            runSpacing: 16,
-                            children: [
-                              HoverButton(
-                                text: 'ILETISIME GEC',
-                                onTap: () {
-                                  context.go('/iletisim');
-                                },
-                              ),
-                              HoverButton(
-                                text: 'WHATSAPP',
-                                onTap: () {
-                                  launchUrl(
-                                    Uri.parse('https://wa.me/905000000000'),
-                                    mode: LaunchMode.externalApplication,
-                                  );
-                                },
-                              ),
-                            ],
-                          ).animate().fade(delay: 700.ms),
-                        ],
+                  Text(
+                    ' > ',
+                    style: AppTextStyles.labelCaps.copyWith(
+                      color: AppColors.accent,
+                      fontSize: isMobile ? 10.5 : 11,
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () => context.go('/katalog/${product.category.toLowerCase()}'),
+                    child: Text(
+                      product.category.toUpperCase(),
+                      style: AppTextStyles.labelCaps.copyWith(
+                        color: AppColors.accent,
+                        fontSize: isMobile ? 10.5 : 11,
                       ),
                     ),
                   ),
                 ],
+              ).animate().fade().slideY(begin: 0.3),
+              SizedBox(height: isMobile ? 24 : 32),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final totalWidth = constraints.maxWidth;
+                  final rightWidth = isMobile ? totalWidth : (totalWidth - 80) * 5 / 11;
+                  final leftWidth = isMobile ? totalWidth : (totalWidth - 80) * 6 / 11;
+
+                  return Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Flex(
+                        direction: isMobile ? Axis.vertical : Axis.horizontal,
+                        crossAxisAlignment: isMobile ? CrossAxisAlignment.start : CrossAxisAlignment.start,
+                        children: [
+                          // Image Section
+                          Expanded(
+                            flex: isMobile ? 0 : 6,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                LayoutBuilder(
+                                  builder: (context, imageConstraints) {
+                                    final double mainImageWidth = imageConstraints.maxWidth;
+
+                                    // Calculate rx, ry for magnifying lens and zoom preview
+                                    double rx = 0.5;
+                                    double ry = 0.5;
+                                    if (_mousePosition != null) {
+                                      rx = (_mousePosition!.dx / mainImageWidth).clamp(0.0, 1.0);
+                                      ry = (_mousePosition!.dy / mainImageHeight).clamp(0.0, 1.0);
+                                    }
+
+                                    // Lens size dimensions (scale = 2.0)
+                                    double scale = 2.0;
+                                    double lensWidth = mainImageWidth / scale;
+                                    double lensHeight = mainImageHeight / scale;
+
+                                    double lensX = rx * mainImageWidth - lensWidth / 2;
+                                    double lensY = ry * mainImageHeight - lensHeight / 2;
+
+                                    // Constrain lens position to stay within boundaries
+                                    lensX = lensX.clamp(0.0, mainImageWidth - lensWidth);
+                                    lensY = lensY.clamp(0.0, mainImageHeight - lensHeight);
+
+                                    return Container(
+                                      width: double.infinity,
+                                      clipBehavior: Clip.antiAlias,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(color: AppColors.outline),
+                                      ),
+                                      child: SizedBox(
+                                        height: mainImageHeight,
+                                        child: Stack(
+                                          fit: StackFit.expand,
+                                          children: [
+                                            // Main Image
+                                            activeImageUrl.startsWith('http')
+                                                ? Image.network(activeImageUrl, fit: BoxFit.cover)
+                                                : Image.asset(activeImageUrl, fit: BoxFit.cover),
+
+                                            // Shaded Lens overlay
+                                            if (_isHovered && !isMobile)
+                                              Positioned(
+                                                left: lensX,
+                                                top: lensY,
+                                                width: lensWidth,
+                                                height: lensHeight,
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.black.withValues(alpha: 0.35),
+                                                    border: Border.all(color: AppColors.outline.withValues(alpha: 0.5), width: 1.5),
+                                                  ),
+                                                ),
+                                              ),
+
+                                            // Mouse Position Listener Overlay
+                                            Positioned.fill(
+                                              child: MouseRegion(
+                                                onEnter: (_) => setState(() => _isHovered = true),
+                                                onExit: (_) {
+                                                  setState(() {
+                                                    _isHovered = false;
+                                                    _mousePosition = null;
+                                                  });
+                                                },
+                                                onHover: (event) {
+                                                  setState(() {
+                                                    _mousePosition = event.localPosition;
+                                                  });
+                                                },
+                                              ),
+                                            ),
+
+                                            // Arrow Buttons
+                                            if (product.imageUrls.length > 1) ...[
+                                              // Left Arrow
+                                              Positioned(
+                                                left: 12,
+                                                top: 0,
+                                                bottom: 0,
+                                                child: Center(
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        _activeImageIndex = (_activeImageIndex - 1 + product.imageUrls.length) % product.imageUrls.length;
+                                                      });
+                                                    },
+                                                    borderRadius: BorderRadius.circular(999),
+                                                    child: Container(
+                                                      padding: const EdgeInsets.all(10),
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.black.withValues(alpha: 0.4),
+                                                        shape: BoxShape.circle,
+                                                        border: Border.all(color: AppColors.outline.withValues(alpha: 0.3)),
+                                                      ),
+                                                      child: const Icon(
+                                                        Icons.chevron_left,
+                                                        color: AppColors.textPrimary,
+                                                        size: 24,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              // Right Arrow
+                                              Positioned(
+                                                right: 12,
+                                                top: 0,
+                                                bottom: 0,
+                                                child: Center(
+                                                  child: InkWell(
+                                                    onTap: () {
+                                                      setState(() {
+                                                        _activeImageIndex = (_activeImageIndex + 1) % product.imageUrls.length;
+                                                      });
+                                                    },
+                                                    borderRadius: BorderRadius.circular(999),
+                                                    child: Container(
+                                                      padding: const EdgeInsets.all(10),
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.black.withValues(alpha: 0.4),
+                                                        shape: BoxShape.circle,
+                                                        border: Border.all(color: AppColors.outline.withValues(alpha: 0.3)),
+                                                      ),
+                                                      child: const Icon(
+                                                        Icons.chevron_right,
+                                                        color: AppColors.textPrimary,
+                                                        size: 24,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ).animate().fade(delay: 200.ms),
+                                const SizedBox(height: 16),
+                                // Fixed thumbnails below the main image
+                                if (product.imageUrls.isNotEmpty)
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: product.imageUrls.asMap().entries.map((entry) {
+                                      final int index = entry.key;
+                                      final String url = entry.value;
+                                      final bool isActive = index == _activeImageIndex;
+
+                                      return Expanded(
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                            left: index == 0 ? 0 : 8,
+                                            right: index == product.imageUrls.length - 1 ? 0 : 8,
+                                          ),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              setState(() {
+                                                _activeImageIndex = index;
+                                              });
+                                            },
+                                            child: AspectRatio(
+                                              aspectRatio: 1.0,
+                                              child: AnimatedContainer(
+                                                duration: const Duration(milliseconds: 300),
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color: isActive ? AppColors.accent : AppColors.outline,
+                                                    width: isActive ? 2 : 1,
+                                                  ),
+                                                ),
+                                                child: AnimatedOpacity(
+                                                  duration: const Duration(milliseconds: 300),
+                                                  opacity: isActive ? 1.0 : 0.6,
+                                                  child: url.startsWith('http')
+                                                      ? Image.network(url, fit: BoxFit.cover)
+                                                      : Image.asset(url, fit: BoxFit.cover),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ).animate().fade(delay: 300.ms),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: isMobile ? 0 : 80, height: isMobile ? 64 : 0),
+                          // Details Section
+                          Expanded(
+                            flex: isMobile ? 0 : 5,
+                            child: Padding(
+                              padding: EdgeInsets.zero,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    product.title,
+                                    style: AppTextStyles.headlineLg.copyWith(
+                                      fontSize: isMobile ? 32 : 30,
+                                      height: 1.2,
+                                      fontWeight: FontWeight.w300,
+                                    ),
+                                  ).animate().fade(delay: 300.ms).slideY(),
+                                  const SizedBox(height: 12),
+                                  Text(
+                                    product.description.isNotEmpty
+                                        ? product.description
+                                        : 'Geleneksel cam isleme sanatinin modern mimariyle bulustugu nokta. Bu seri, seffafligin ve yansimanin en saf halini yasam alanlariniza tasiyor. El isciligiyle hazirlanan kenar detaylari ve ustun cam kalitesiyle zamansiz bir parca.',
+                                    style: AppTextStyles.bodyMd.copyWith(height: 1.4, fontSize: 13.5),
+                                  ).animate().fade(delay: 400.ms),
+                                  const SizedBox(height: 16),
+                                  
+                                  Text(
+                                    'TEKNIK OZELLIKLER',
+                                    style: AppTextStyles.labelCaps.copyWith(
+                                      color: AppColors.textPrimary,
+                                      fontSize: 11,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 6),
+                                  Container(height: 1, color: AppColors.outline),
+                                  _buildTechRow('MALZEME', 'Ekstra Berrak Flotal Ayna').animate().fade(delay: 500.ms),
+                                  _buildTechRow('STANDART BOYUT', '120cm x 40cm x 85cm').animate().fade(delay: 550.ms),
+                                  _buildTechRow('YUZEY ISLEMI', 'Bizote & Polisaj').animate().fade(delay: 600.ms),
+                                  _buildTechRow('TASIMA KAPASITESI', '45 kg').animate().fade(delay: 650.ms),
+                                  
+                                  const SizedBox(height: 16),
+                                  Wrap(
+                                    spacing: 16,
+                                    runSpacing: 16,
+                                    children: [
+                                      HoverButton(
+                                        text: 'ILETISIME GEC',
+                                        onTap: () {
+                                          context.go('/iletisim');
+                                        },
+                                      ),
+                                      HoverButton(
+                                        text: 'WHATSAPP',
+                                        onTap: () {
+                                          launchUrl(
+                                            Uri.parse('https://wa.me/905000000000'),
+                                            mode: LaunchMode.externalApplication,
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ).animate().fade(delay: 700.ms),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      // Magnifier Zoom Preview Window on the Right (Over Details column)
+                      if (!isMobile && _isHovered && _mousePosition != null)
+                        Positioned(
+                          right: 0,
+                          top: 0,
+                          width: rightWidth,
+                          height: mainImageHeight,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: AppColors.background,
+                              border: Border.all(color: Colors.black.withValues(alpha: 0.4), width: 1.0),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withValues(alpha: 0.5),
+                                  blurRadius: 20,
+                                  offset: const Offset(0, 10),
+                                )
+                              ],
+                            ),
+                            clipBehavior: Clip.antiAlias,
+                            child: LayoutBuilder(
+                              builder: (context, zoomConstraints) {
+                                final zoomBoxWidth = zoomConstraints.maxWidth;
+                                final zoomBoxHeight = zoomConstraints.maxHeight;
+
+                                double rx = 0.5;
+                                double ry = 0.5;
+                                if (_mousePosition != null) {
+                                  rx = (_mousePosition!.dx / leftWidth).clamp(0.0, 1.0);
+                                  ry = (_mousePosition!.dy / mainImageHeight).clamp(0.0, 1.0);
+                                }
+
+                                const double zoomScale = 3.0;
+                                final double scaledWidth = leftWidth * zoomScale;
+                                final double scaledHeight = mainImageHeight * zoomScale;
+
+                                double tx = zoomBoxWidth / 2 - rx * leftWidth * zoomScale;
+                                double ty = zoomBoxHeight / 2 - ry * mainImageHeight * zoomScale;
+
+                                // Clamp the translation to prevent empty space (black bars)
+                                tx = tx.clamp(zoomBoxWidth - scaledWidth, 0.0);
+                                ty = ty.clamp(zoomBoxHeight - scaledHeight, 0.0);
+
+                                return ClipRect(
+                                  child: Transform(
+                                    transform: Matrix4.translationValues(tx, ty, 0.0) *
+                                        Matrix4.diagonal3Values(zoomScale, zoomScale, 1.0),
+                                    child: activeImageUrl.startsWith('http')
+                                        ? Image.network(
+                                            activeImageUrl,
+                                            width: leftWidth,
+                                            height: mainImageHeight,
+                                            fit: BoxFit.cover,
+                                              )
+                                        : Image.asset(
+                                            activeImageUrl,
+                                            width: leftWidth,
+                                            height: mainImageHeight,
+                                            fit: BoxFit.cover,
+                                          ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        ),
+                    ],
+                  );
+                },
               ),
             ],
           ),
