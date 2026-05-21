@@ -441,8 +441,6 @@ class ProductDetailContent extends StatefulWidget {
 
 class _ProductDetailContentState extends State<ProductDetailContent> {
   int _activeImageIndex = 0;
-  bool _isHovered = false;
-  Offset? _mousePosition;
 
   @override
   void initState() {
@@ -468,30 +466,15 @@ class _ProductDetailContentState extends State<ProductDetailContent> {
 
   Widget _buildTechRow(String label, String value) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 24),
       decoration: const BoxDecoration(
         border: Border(bottom: BorderSide(color: AppColors.outline, width: 1)),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Expanded(
-            child: Text(
-              label,
-              style: AppTextStyles.labelCaps.copyWith(
-                color: AppColors.textSecondary,
-                fontSize: 10.5,
-              ),
-            ),
-          ),
-          Text(
-            value,
-            style: AppTextStyles.bodyMd.copyWith(
-              color: AppColors.textPrimary,
-              fontWeight: FontWeight.w400,
-              fontSize: 13,
-            ),
-          ),
+          Expanded(child: Text(label, style: AppTextStyles.labelCaps.copyWith(color: AppColors.textSecondary))),
+          Text(value, style: AppTextStyles.bodyMd.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.w400)),
         ],
       ),
     );
@@ -500,11 +483,7 @@ class _ProductDetailContentState extends State<ProductDetailContent> {
   @override
   Widget build(BuildContext context) {
     final w = MediaQuery.of(context).size.width;
-    final h = MediaQuery.of(context).size.height;
     final isMobile = w < 800;
-    
-    // Dynamic height of the main image on desktop to fit the screen viewport beautifully
-    final double mainImageHeight = isMobile ? 280 : (h * 0.38).clamp(280.0, 390.0);
     
     // Find product or default to first
     final product = allProducts.firstWhere((p) => p.id == widget.productId, orElse: () => allProducts.first);
@@ -523,391 +502,158 @@ class _ProductDetailContentState extends State<ProductDetailContent> {
           padding: EdgeInsets.only(
             left: isMobile ? 32 : 120,
             right: isMobile ? 32 : 120,
-            top: isMobile ? 120 : 116,
+            top: 160,
             bottom: 120,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Breadcrumbs at the top of the entire page content
-              Wrap(
-                crossAxisAlignment: WrapCrossAlignment.center,
+              // Premium Product Layout
+              Flex(
+                direction: isMobile ? Axis.vertical : Axis.horizontal,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  InkWell(
-                    onTap: () => context.go('/'),
-                    child: Text(
-                      'KOLEKSIYONLAR',
-                      style: AppTextStyles.labelCaps.copyWith(
-                        color: AppColors.accent,
-                        fontSize: isMobile ? 10.5 : 11,
-                      ),
+                  // Image Section
+                  Expanded(
+                    flex: isMobile ? 0 : 6,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            InkWell(
+                              onTap: () => context.go('/'),
+                              child: Text('KOLEKSIYONLAR', style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent)),
+                            ),
+                            Text(' > ', style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent)),
+                            InkWell(
+                              onTap: () => context.go('/katalog/${product.category.toLowerCase()}'),
+                              child: Text(product.category.toUpperCase(), style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent)),
+                            ),
+                          ],
+                        ).animate().fade().slideY(),
+                        const SizedBox(height: 32),
+                        Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(border: Border.all(color: AppColors.outline)),
+                          child: SizedBox(
+                            height: isMobile ? 360 : 540,
+                            child: activeImageUrl.startsWith('http')
+                                ? Image.network(activeImageUrl, fit: BoxFit.cover)
+                                : Image.asset(activeImageUrl, fit: BoxFit.cover),
+                          ),
+                        ).animate().fade(delay: 200.ms),
+                        const SizedBox(height: 24),
+                        // 3 Proportional Square thumbnails below the main image
+                        if (product.imageUrls.length > 1)
+                          Builder(
+                            builder: (context) {
+                              final List<MapEntry<int, String>> inactiveImages = [];
+                              for (int i = 0; i < product.imageUrls.length; i++) {
+                                if (i != _activeImageIndex) {
+                                  inactiveImages.add(MapEntry(i, product.imageUrls[i]));
+                                }
+                              }
+                              final displayImages = inactiveImages.take(3).toList();
+
+                              return Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: displayImages.asMap().entries.map((entry) {
+                                  final int index = entry.key;
+                                  final MapEntry<int, String> item = entry.value;
+                                  final int originalIndex = item.key;
+                                  final String url = item.value;
+
+                                  return Expanded(
+                                    child: Padding(
+                                      padding: EdgeInsets.only(
+                                        left: index == 0 ? 0 : 8,
+                                        right: index == displayImages.length - 1 ? 0 : 8,
+                                      ),
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            _activeImageIndex = originalIndex;
+                                          });
+                                        },
+                                        child: AspectRatio(
+                                          aspectRatio: 1.0,
+                                          child: Container(
+                                            decoration: BoxDecoration(
+                                              border: Border.all(color: AppColors.outline),
+                                            ),
+                                            child: url.startsWith('http')
+                                                ? Image.network(url, fit: BoxFit.cover)
+                                                : Image.asset(url, fit: BoxFit.cover),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                              );
+                            }
+                          ).animate().fade(delay: 300.ms),
+                      ],
                     ),
                   ),
-                  Text(
-                    ' > ',
-                    style: AppTextStyles.labelCaps.copyWith(
-                      color: AppColors.accent,
-                      fontSize: isMobile ? 10.5 : 11,
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () => context.go('/katalog/${product.category.toLowerCase()}'),
-                    child: Text(
-                      product.category.toUpperCase(),
-                      style: AppTextStyles.labelCaps.copyWith(
-                        color: AppColors.accent,
-                        fontSize: isMobile ? 10.5 : 11,
+                  SizedBox(width: isMobile ? 0 : 80, height: isMobile ? 64 : 0),
+                  
+                  // Details Section
+                  Expanded(
+                    flex: isMobile ? 0 : 5,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: isMobile ? 0 : 64),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(product.title, style: AppTextStyles.headlineLg.copyWith(fontSize: isMobile ? 48 : 64, height: 1.1, fontWeight: FontWeight.w200))
+                            .animate().fade(delay: 300.ms).slideY(),
+                          const SizedBox(height: 48),
+                          Text(
+                            product.description.isNotEmpty
+                                ? product.description
+                                : 'Geleneksel cam isleme sanatinin modern mimariyle bulustugu nokta. Bu seri, seffafligin ve yansimanin en saf halini yasam alanlariniza tasiyor. El isciligiyle hazirlanan kenar detaylari ve ustun cam kalitesiyle zamansiz bir parca.',
+                            style: AppTextStyles.bodyLg,
+                          ).animate().fade(delay: 400.ms),
+                          const SizedBox(height: 80),
+                          
+                          Text('TEKNIK OZELLIKLER', style: AppTextStyles.labelCaps.copyWith(color: AppColors.textPrimary)),
+                          const SizedBox(height: 16),
+                          Container(height: 1, color: AppColors.outline),
+                          _buildTechRow('MALZEME', 'Ekstra Berrak Flotal Ayna').animate().fade(delay: 500.ms),
+                          _buildTechRow('STANDART BOYUT', '120cm x 40cm x 85cm').animate().fade(delay: 550.ms),
+                          _buildTechRow('YUZEY ISLEMI', 'Bizote & Polisaj').animate().fade(delay: 600.ms),
+                          _buildTechRow('TASIMA KAPASITESI', '45 kg').animate().fade(delay: 650.ms),
+                          
+                          const SizedBox(height: 80),
+                          Wrap(
+                            spacing: 16,
+                            runSpacing: 16,
+                            children: [
+                              HoverButton(
+                                text: 'ILETISIME GEC',
+                                onTap: () {
+                                  context.go('/iletisim');
+                                },
+                              ),
+                              HoverButton(
+                                text: 'WHATSAPP',
+                                onTap: () {
+                                  launchUrl(
+                                    Uri.parse('https://wa.me/905000000000'),
+                                    mode: LaunchMode.externalApplication,
+                                  );
+                                },
+                              ),
+                            ],
+                          ).animate().fade(delay: 700.ms),
+                        ],
                       ),
                     ),
                   ),
                 ],
-              ).animate().fade().slideY(begin: 0.3),
-              SizedBox(height: isMobile ? 24 : 32),
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  final totalWidth = constraints.maxWidth;
-                  final rightWidth = isMobile ? totalWidth : (totalWidth - 80) * 5 / 11;
-                  final leftWidth = isMobile ? totalWidth : (totalWidth - 80) * 6 / 11;
-
-                  return Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Flex(
-                        direction: isMobile ? Axis.vertical : Axis.horizontal,
-                        crossAxisAlignment: isMobile ? CrossAxisAlignment.start : CrossAxisAlignment.start,
-                        children: [
-                          // Image Section
-                          Expanded(
-                            flex: isMobile ? 0 : 6,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                LayoutBuilder(
-                                  builder: (context, imageConstraints) {
-                                    final double mainImageWidth = imageConstraints.maxWidth;
-
-                                    // Calculate rx, ry for magnifying lens and zoom preview
-                                    double rx = 0.5;
-                                    double ry = 0.5;
-                                    if (_mousePosition != null) {
-                                      rx = (_mousePosition!.dx / mainImageWidth).clamp(0.0, 1.0);
-                                      ry = (_mousePosition!.dy / mainImageHeight).clamp(0.0, 1.0);
-                                    }
-
-                                    // Lens size dimensions (scale = 2.0)
-                                    double scale = 2.0;
-                                    double lensWidth = mainImageWidth / scale;
-                                    double lensHeight = mainImageHeight / scale;
-
-                                    double lensX = rx * mainImageWidth - lensWidth / 2;
-                                    double lensY = ry * mainImageHeight - lensHeight / 2;
-
-                                    // Constrain lens position to stay within boundaries
-                                    lensX = lensX.clamp(0.0, mainImageWidth - lensWidth);
-                                    lensY = lensY.clamp(0.0, mainImageHeight - lensHeight);
-
-                                    return Container(
-                                      width: double.infinity,
-                                      clipBehavior: Clip.antiAlias,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(color: AppColors.outline),
-                                      ),
-                                      child: SizedBox(
-                                        height: mainImageHeight,
-                                        child: Stack(
-                                          fit: StackFit.expand,
-                                          children: [
-                                            // Main Image
-                                            activeImageUrl.startsWith('http')
-                                                ? Image.network(activeImageUrl, fit: BoxFit.cover)
-                                                : Image.asset(activeImageUrl, fit: BoxFit.cover),
-
-                                            // Shaded Lens overlay
-                                            if (_isHovered && !isMobile)
-                                              Positioned(
-                                                left: lensX,
-                                                top: lensY,
-                                                width: lensWidth,
-                                                height: lensHeight,
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                    color: Colors.black.withValues(alpha: 0.35),
-                                                    border: Border.all(color: AppColors.outline.withValues(alpha: 0.5), width: 1.5),
-                                                  ),
-                                                ),
-                                              ),
-
-                                            // Mouse Position Listener Overlay
-                                            Positioned.fill(
-                                              child: MouseRegion(
-                                                onEnter: (_) => setState(() => _isHovered = true),
-                                                onExit: (_) {
-                                                  setState(() {
-                                                    _isHovered = false;
-                                                    _mousePosition = null;
-                                                  });
-                                                },
-                                                onHover: (event) {
-                                                  setState(() {
-                                                    _mousePosition = event.localPosition;
-                                                  });
-                                                },
-                                              ),
-                                            ),
-
-                                            // Arrow Buttons
-                                            if (product.imageUrls.length > 1) ...[
-                                              // Left Arrow
-                                              Positioned(
-                                                left: 12,
-                                                top: 0,
-                                                bottom: 0,
-                                                child: Center(
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        _activeImageIndex = (_activeImageIndex - 1 + product.imageUrls.length) % product.imageUrls.length;
-                                                      });
-                                                    },
-                                                    borderRadius: BorderRadius.circular(999),
-                                                    child: Container(
-                                                      padding: const EdgeInsets.all(10),
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.black.withValues(alpha: 0.4),
-                                                        shape: BoxShape.circle,
-                                                        border: Border.all(color: AppColors.outline.withValues(alpha: 0.3)),
-                                                      ),
-                                                      child: const Icon(
-                                                        Icons.chevron_left,
-                                                        color: AppColors.textPrimary,
-                                                        size: 24,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              // Right Arrow
-                                              Positioned(
-                                                right: 12,
-                                                top: 0,
-                                                bottom: 0,
-                                                child: Center(
-                                                  child: InkWell(
-                                                    onTap: () {
-                                                      setState(() {
-                                                        _activeImageIndex = (_activeImageIndex + 1) % product.imageUrls.length;
-                                                      });
-                                                    },
-                                                    borderRadius: BorderRadius.circular(999),
-                                                    child: Container(
-                                                      padding: const EdgeInsets.all(10),
-                                                      decoration: BoxDecoration(
-                                                        color: Colors.black.withValues(alpha: 0.4),
-                                                        shape: BoxShape.circle,
-                                                        border: Border.all(color: AppColors.outline.withValues(alpha: 0.3)),
-                                                      ),
-                                                      child: const Icon(
-                                                        Icons.chevron_right,
-                                                        color: AppColors.textPrimary,
-                                                        size: 24,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ).animate().fade(delay: 200.ms),
-                                const SizedBox(height: 16),
-                                // Fixed thumbnails below the main image
-                                if (product.imageUrls.isNotEmpty)
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: product.imageUrls.asMap().entries.map((entry) {
-                                      final int index = entry.key;
-                                      final String url = entry.value;
-                                      final bool isActive = index == _activeImageIndex;
-
-                                      return Expanded(
-                                        child: Padding(
-                                          padding: EdgeInsets.only(
-                                            left: index == 0 ? 0 : 8,
-                                            right: index == product.imageUrls.length - 1 ? 0 : 8,
-                                          ),
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                _activeImageIndex = index;
-                                              });
-                                            },
-                                            child: AspectRatio(
-                                              aspectRatio: 1.0,
-                                              child: AnimatedContainer(
-                                                duration: const Duration(milliseconds: 300),
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                    color: isActive ? AppColors.accent : AppColors.outline,
-                                                    width: isActive ? 2 : 1,
-                                                  ),
-                                                ),
-                                                child: AnimatedOpacity(
-                                                  duration: const Duration(milliseconds: 300),
-                                                  opacity: isActive ? 1.0 : 0.6,
-                                                  child: url.startsWith('http')
-                                                      ? Image.network(url, fit: BoxFit.cover)
-                                                      : Image.asset(url, fit: BoxFit.cover),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      );
-                                    }).toList(),
-                                  ).animate().fade(delay: 300.ms),
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: isMobile ? 0 : 80, height: isMobile ? 64 : 0),
-                          // Details Section
-                          Expanded(
-                            flex: isMobile ? 0 : 5,
-                            child: Padding(
-                              padding: EdgeInsets.zero,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    product.title,
-                                    style: AppTextStyles.headlineLg.copyWith(
-                                      fontSize: isMobile ? 32 : 30,
-                                      height: 1.2,
-                                      fontWeight: FontWeight.w300,
-                                    ),
-                                  ).animate().fade(delay: 300.ms).slideY(),
-                                  const SizedBox(height: 12),
-                                  Text(
-                                    product.description.isNotEmpty
-                                        ? product.description
-                                        : 'Geleneksel cam isleme sanatinin modern mimariyle bulustugu nokta. Bu seri, seffafligin ve yansimanin en saf halini yasam alanlariniza tasiyor. El isciligiyle hazirlanan kenar detaylari ve ustun cam kalitesiyle zamansiz bir parca.',
-                                    style: AppTextStyles.bodyMd.copyWith(height: 1.4, fontSize: 13.5),
-                                  ).animate().fade(delay: 400.ms),
-                                  const SizedBox(height: 16),
-                                  
-                                  Text(
-                                    'TEKNIK OZELLIKLER',
-                                    style: AppTextStyles.labelCaps.copyWith(
-                                      color: AppColors.textPrimary,
-                                      fontSize: 11,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 6),
-                                  Container(height: 1, color: AppColors.outline),
-                                  _buildTechRow('MALZEME', 'Ekstra Berrak Flotal Ayna').animate().fade(delay: 500.ms),
-                                  _buildTechRow('STANDART BOYUT', '120cm x 40cm x 85cm').animate().fade(delay: 550.ms),
-                                  _buildTechRow('YUZEY ISLEMI', 'Bizote & Polisaj').animate().fade(delay: 600.ms),
-                                  _buildTechRow('TASIMA KAPASITESI', '45 kg').animate().fade(delay: 650.ms),
-                                  
-                                  const SizedBox(height: 16),
-                                  Wrap(
-                                    spacing: 16,
-                                    runSpacing: 16,
-                                    children: [
-                                      HoverButton(
-                                        text: 'ILETISIME GEC',
-                                        onTap: () {
-                                          context.go('/iletisim');
-                                        },
-                                      ),
-                                      HoverButton(
-                                        text: 'WHATSAPP',
-                                        onTap: () {
-                                          launchUrl(
-                                            Uri.parse('https://wa.me/905000000000'),
-                                            mode: LaunchMode.externalApplication,
-                                          );
-                                        },
-                                      ),
-                                    ],
-                                  ).animate().fade(delay: 700.ms),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      // Magnifier Zoom Preview Window on the Right (Over Details column)
-                      if (!isMobile && _isHovered && _mousePosition != null)
-                        Positioned(
-                          right: 0,
-                          top: 0,
-                          width: rightWidth,
-                          height: mainImageHeight,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: AppColors.background,
-                              border: Border.all(color: Colors.black.withValues(alpha: 0.4), width: 1.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.black.withValues(alpha: 0.5),
-                                  blurRadius: 20,
-                                  offset: const Offset(0, 10),
-                                )
-                              ],
-                            ),
-                            clipBehavior: Clip.antiAlias,
-                            child: LayoutBuilder(
-                              builder: (context, zoomConstraints) {
-                                final zoomBoxWidth = zoomConstraints.maxWidth;
-                                final zoomBoxHeight = zoomConstraints.maxHeight;
-
-                                double rx = 0.5;
-                                double ry = 0.5;
-                                if (_mousePosition != null) {
-                                  rx = (_mousePosition!.dx / leftWidth).clamp(0.0, 1.0);
-                                  ry = (_mousePosition!.dy / mainImageHeight).clamp(0.0, 1.0);
-                                }
-
-                                const double zoomScale = 3.0;
-                                final double scaledWidth = leftWidth * zoomScale;
-                                final double scaledHeight = mainImageHeight * zoomScale;
-
-                                double tx = zoomBoxWidth / 2 - rx * leftWidth * zoomScale;
-                                double ty = zoomBoxHeight / 2 - ry * mainImageHeight * zoomScale;
-
-                                // Clamp the translation to prevent empty space (black bars)
-                                tx = tx.clamp(zoomBoxWidth - scaledWidth, 0.0);
-                                ty = ty.clamp(zoomBoxHeight - scaledHeight, 0.0);
-
-                                return ClipRect(
-                                  child: Transform(
-                                    transform: Matrix4.translationValues(tx, ty, 0.0) *
-                                        Matrix4.diagonal3Values(zoomScale, zoomScale, 1.0),
-                                    child: activeImageUrl.startsWith('http')
-                                        ? Image.network(
-                                            activeImageUrl,
-                                            width: leftWidth,
-                                            height: mainImageHeight,
-                                            fit: BoxFit.cover,
-                                              )
-                                        : Image.asset(
-                                            activeImageUrl,
-                                            width: leftWidth,
-                                            height: mainImageHeight,
-                                            fit: BoxFit.cover,
-                                          ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                    ],
-                  );
-                },
               ),
             ],
           ),
