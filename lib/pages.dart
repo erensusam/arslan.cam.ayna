@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_animate/flutter_animate.dart';
@@ -12,6 +13,7 @@ class ProductItem {
   final List<String> imageUrls;
   final List<String> styleTags;
   final String description;
+  final BoxFit fit;
   const ProductItem({
     required this.id,
     required this.title,
@@ -20,6 +22,7 @@ class ProductItem {
     required this.imageUrls,
     this.styleTags = const [],
     this.description = '',
+    this.fit = BoxFit.cover,
   });
 }
 
@@ -167,13 +170,42 @@ final List<ProductItem> allProducts = [
     title: 'GOLD DETAYLI TRIPTIK KELEBEK TABLO',
     category: 'Tablolar',
     styleTags: ['Aynalı Çerçeve', 'Lüks', 'Kelebek', 'Gold Detay', 'Modern'],
-    imageUrl: 'assets/images/kelebek_tablo_1.jpg',
+    imageUrl: 'assets/images/kelebek_tablo_1.png',
     imageUrls: [
-      'assets/images/kelebek_tablo_2.jpg',
-      'assets/images/kelebek_tablo_1.jpg',
-      'assets/images/kelebek_tablo_3.jpg',
+      'assets/images/kelebek_tablo_1.png',
+      'assets/images/kelebek_tablo_2.png',
+      'assets/images/kelebek_tablo_3.png',
     ],
     description: 'Premium eskitme ayna cerceve icerisinde yer alan, zarif gold konturlere sahip el yapimi kabartmali kelebek formlari ile yasam alanlariniza derinlik ve sonsuz zerafet katan modern triptik (uc parcali) cam tablo tasarimi.',
+    fit: BoxFit.contain,
+  ),
+  const ProductItem(
+    id: 'c7',
+    title: 'MAVI GULLU VE KELEBEKLI TRIPTIK TABLO',
+    category: 'Tablolar',
+    styleTags: ['Aynali Cerceve', 'Mavi Gul', 'Luks', 'Kelebek', 'Gold Detay', 'Modern'],
+    imageUrl: 'assets/images/kelebek_guller_tablo_1.png',
+    imageUrls: [
+      'assets/images/kelebek_guller_tablo_1.png',
+      'assets/images/kelebek_guller_tablo_2.png',
+      'assets/images/kelebek_guller_tablo_3.png',
+    ],
+    description: 'Zarif ayna cerceve tasarimiyla zenginlesen, goz alici mavi gul detaylari ve altin konturlu kelebek kabartmalariyla yasam alanlariniza modern ve estetik bir derinlik katan premium triptik (uc parcali) cam tablo seti.',
+    fit: BoxFit.contain,
+  ),
+  const ProductItem(
+    id: 'c8',
+    title: 'RENKLI TUY VE KRISTAL KURE TRIPTIK TABLO',
+    category: 'Tablolar',
+    styleTags: ['Aynali Cerceve', 'Luks', 'Renkli', 'Kristal', 'Modern'],
+    imageUrl: 'assets/images/tuy_kristal_tablo_1.png',
+    imageUrls: [
+      'assets/images/tuy_kristal_tablo_1.png',
+      'assets/images/tuy_kristal_tablo_2.png',
+      'assets/images/tuy_kristal_tablo_3.png',
+    ],
+    description: 'Canli renk gecislerine sahip dekoratif tuy motifleri ve merkezde yer alan altin kristal kure formuyla goz alici bir kontrast sunan, premium ayna cerceveli uc parcali cam tablo seti.',
+    fit: BoxFit.contain,
   ),
 
   // --- DRESUARLAR ---
@@ -431,6 +463,60 @@ class _CatalogContentState extends State<CatalogContent> {
   }
 }
 
+class _ProductNavArrow extends StatefulWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+  const _ProductNavArrow({required this.icon, required this.onTap});
+
+  @override
+  State<_ProductNavArrow> createState() => _ProductNavArrowState();
+}
+
+class _ProductNavArrowState extends State<_ProductNavArrow> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: SystemMouseCursors.click,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOutCubic,
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: _isHovered 
+                ? AppColors.accent.withValues(alpha: 0.9) 
+                : Colors.black.withValues(alpha: 0.5),
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: _isHovered ? AppColors.accent : AppColors.outline,
+              width: 1,
+            ),
+            boxShadow: _isHovered 
+                ? [
+                    BoxShadow(
+                      color: AppColors.accent.withValues(alpha: 0.3),
+                      blurRadius: 12,
+                      spreadRadius: 2,
+                    )
+                  ]
+                : [],
+          ),
+          child: Icon(
+            widget.icon,
+            color: _isHovered ? Colors.black : AppColors.textPrimary,
+            size: 28,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class ProductDetailContent extends StatefulWidget {
   final String productId;
   const ProductDetailContent({super.key, required this.productId});
@@ -441,6 +527,9 @@ class ProductDetailContent extends StatefulWidget {
 
 class _ProductDetailContentState extends State<ProductDetailContent> {
   int _activeImageIndex = 0;
+  bool _isHovering = false;
+  Offset _hoverPos = Offset.zero;
+  Timer? _hoverTimer;
 
   @override
   void initState() {
@@ -456,9 +545,19 @@ class _ProductDetailContentState extends State<ProductDetailContent> {
     }
   }
 
+  @override
+  void dispose() {
+    _hoverTimer?.cancel();
+    super.dispose();
+  }
+
   void _initActiveImage() {
     final product = allProducts.firstWhere((p) => p.id == widget.productId, orElse: () => allProducts.first);
-    final index = product.imageUrls.indexOf(product.imageUrl);
+    final displayImages = product.imageUrls.take(3).toList();
+    if (displayImages.isEmpty) {
+      displayImages.add(product.imageUrl);
+    }
+    final index = displayImages.indexOf(product.imageUrl);
     setState(() {
       _activeImageIndex = index != -1 ? index : 0;
     });
@@ -488,10 +587,14 @@ class _ProductDetailContentState extends State<ProductDetailContent> {
     // Find product or default to first
     final product = allProducts.firstWhere((p) => p.id == widget.productId, orElse: () => allProducts.first);
 
-    // Get active image
-    final String activeImageUrl = (product.imageUrls.isNotEmpty && _activeImageIndex < product.imageUrls.length)
-        ? product.imageUrls[_activeImageIndex]
-        : product.imageUrl;
+    // Get up to 3 images from product.imageUrls
+    final displayImages = product.imageUrls.take(3).toList();
+    if (displayImages.isEmpty) {
+      displayImages.add(product.imageUrl);
+    }
+
+    final int activeIndex = _activeImageIndex.clamp(0, displayImages.length - 1);
+    final String activeImageUrl = displayImages[activeIndex];
 
     return SingleChildScrollView(
       child: Container(
@@ -508,152 +611,358 @@ class _ProductDetailContentState extends State<ProductDetailContent> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Premium Product Layout
-              Flex(
-                direction: isMobile ? Axis.vertical : Axis.horizontal,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Image Section
-                  Expanded(
-                    flex: isMobile ? 0 : 6,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Wrap(
-                          crossAxisAlignment: WrapCrossAlignment.center,
-                          children: [
-                            InkWell(
-                              onTap: () => context.go('/'),
-                              child: Text('KOLEKSIYONLAR', style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent)),
-                            ),
-                            Text(' > ', style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent)),
-                            InkWell(
-                              onTap: () => context.go('/katalog/${product.category.toLowerCase()}'),
-                              child: Text(product.category.toUpperCase(), style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent)),
-                            ),
-                          ],
-                        ).animate().fade().slideY(),
-                        const SizedBox(height: 32),
-                        Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(border: Border.all(color: AppColors.outline)),
-                          child: SizedBox(
-                            height: isMobile ? 360 : 540,
-                            child: activeImageUrl.startsWith('http')
-                                ? Image.network(activeImageUrl, fit: BoxFit.cover)
-                                : Image.asset(activeImageUrl, fit: BoxFit.cover),
-                          ),
-                        ).animate().fade(delay: 200.ms),
-                        const SizedBox(height: 24),
-                        // 3 Proportional Square thumbnails below the main image
-                        if (product.imageUrls.length > 1)
-                          Builder(
-                            builder: (context) {
-                              final List<MapEntry<int, String>> inactiveImages = [];
-                              for (int i = 0; i < product.imageUrls.length; i++) {
-                                if (i != _activeImageIndex) {
-                                  inactiveImages.add(MapEntry(i, product.imageUrls[i]));
-                                }
-                              }
-                              final displayImages = inactiveImages.take(3).toList();
-
-                              return Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: displayImages.asMap().entries.map((entry) {
-                                  final int index = entry.key;
-                                  final MapEntry<int, String> item = entry.value;
-                                  final int originalIndex = item.key;
-                                  final String url = item.value;
-
-                                  return Expanded(
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                        left: index == 0 ? 0 : 8,
-                                        right: index == displayImages.length - 1 ? 0 : 8,
-                                      ),
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          setState(() {
-                                            _activeImageIndex = originalIndex;
-                                          });
-                                        },
-                                        child: AspectRatio(
-                                          aspectRatio: 1.0,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                              border: Border.all(color: AppColors.outline),
-                                            ),
-                                            child: url.startsWith('http')
-                                                ? Image.network(url, fit: BoxFit.cover)
-                                                : Image.asset(url, fit: BoxFit.cover),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                              );
-                            }
-                          ).animate().fade(delay: 300.ms),
-                      ],
-                    ),
-                  ),
-                  SizedBox(width: isMobile ? 0 : 80, height: isMobile ? 64 : 0),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  final double totalWidth = constraints.maxWidth;
+                  final double containerWidth = isMobile ? totalWidth : (totalWidth - 80) * 6 / 11;
                   
-                  // Details Section
-                  Expanded(
-                    flex: isMobile ? 0 : 5,
-                    child: Padding(
-                      padding: EdgeInsets.only(top: isMobile ? 0 : 64),
-                      child: Column(
+                  const double arrowWidth = 54.0;
+                  const double arrowSpacing = 16.0;
+                  final double totalArrowsSpace = (!isMobile && displayImages.length > 1) ? (arrowWidth + arrowSpacing) * 2 : 0.0;
+                  final double imageContainerWidth = containerWidth - totalArrowsSpace;
+                  
+                  final double containerHeight = isMobile ? 360 : 540;
+                  const double lensSize = 150.0;
+                  const double zoomBoxSize = 450.0;
+                  const double scale = zoomBoxSize / lensSize;
+
+                  double maxLeft = (imageContainerWidth - lensSize).clamp(0.0, double.infinity);
+                  double maxTop = (containerHeight - lensSize).clamp(0.0, double.infinity);
+                  double lensLeft = (_hoverPos.dx - lensSize / 2).clamp(0.0, maxLeft);
+                  double lensTop = (_hoverPos.dy - lensSize / 2).clamp(0.0, maxTop);
+
+                  return Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      Flex(
+                        direction: isMobile ? Axis.vertical : Axis.horizontal,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(product.title, style: AppTextStyles.headlineLg.copyWith(fontSize: isMobile ? 48 : 64, height: 1.1, fontWeight: FontWeight.w200))
-                            .animate().fade(delay: 300.ms).slideY(),
-                          const SizedBox(height: 48),
-                          Text(
-                            product.description.isNotEmpty
-                                ? product.description
-                                : 'Geleneksel cam isleme sanatinin modern mimariyle bulustugu nokta. Bu seri, seffafligin ve yansimanin en saf halini yasam alanlariniza tasiyor. El isciligiyle hazirlanan kenar detaylari ve ustun cam kalitesiyle zamansiz bir parca.',
-                            style: AppTextStyles.bodyLg,
-                          ).animate().fade(delay: 400.ms),
-                          const SizedBox(height: 80),
-                          
-                          Text('TEKNIK OZELLIKLER', style: AppTextStyles.labelCaps.copyWith(color: AppColors.textPrimary)),
-                          const SizedBox(height: 16),
-                          Container(height: 1, color: AppColors.outline),
-                          _buildTechRow('MALZEME', 'Ekstra Berrak Flotal Ayna').animate().fade(delay: 500.ms),
-                          _buildTechRow('STANDART BOYUT', '120cm x 40cm x 85cm').animate().fade(delay: 550.ms),
-                          _buildTechRow('YUZEY ISLEMI', 'Bizote & Polisaj').animate().fade(delay: 600.ms),
-                          _buildTechRow('TASIMA KAPASITESI', '45 kg').animate().fade(delay: 650.ms),
-                          
-                          const SizedBox(height: 80),
-                          Wrap(
-                            spacing: 16,
-                            runSpacing: 16,
-                            children: [
-                              HoverButton(
-                                text: 'ILETISIME GEC',
-                                onTap: () {
-                                  context.go('/iletisim');
-                                },
+                          // Image Section
+                          Expanded(
+                            flex: isMobile ? 0 : 6,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Wrap(
+                                  crossAxisAlignment: WrapCrossAlignment.center,
+                                  children: [
+                                    InkWell(
+                                      onTap: () => context.go('/'),
+                                      child: Text('KOLEKSIYONLAR', style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent)),
+                                    ),
+                                    Text(' > ', style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent)),
+                                    InkWell(
+                                      onTap: () => context.go('/katalog/${product.category.toLowerCase()}'),
+                                      child: Text(product.category.toUpperCase(), style: AppTextStyles.labelCaps.copyWith(color: AppColors.accent)),
+                                    ),
+                                  ],
+                                ).animate().fade().slideY(),
+                                const SizedBox(height: 32),
+                                isMobile
+                                    ? Stack(
+                                        alignment: Alignment.center,
+                                        children: [
+                                          Container(
+                                            width: double.infinity,
+                                            decoration: BoxDecoration(border: Border.all(color: AppColors.outline)),
+                                            child: SizedBox(
+                                              height: containerHeight,
+                                              child: activeImageUrl.startsWith('http')
+                                                  ? Image.network(activeImageUrl, fit: product.fit)
+                                                  : Image.asset(activeImageUrl, fit: product.fit),
+                                            ),
+                                          ).animate().fade(delay: 200.ms),
+                                          // Left Arrow Button overlaid on mobile
+                                          if (displayImages.length > 1)
+                                            Positioned(
+                                              left: 16,
+                                              child: _ProductNavArrow(
+                                                icon: Icons.chevron_left,
+                                                onTap: () {
+                                                  _hoverTimer?.cancel();
+                                                  setState(() {
+                                                    _activeImageIndex = (_activeImageIndex - 1 + displayImages.length) % displayImages.length;
+                                                    _isHovering = false;
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                          // Right Arrow Button overlaid on mobile
+                                          if (displayImages.length > 1)
+                                            Positioned(
+                                              right: 16,
+                                              child: _ProductNavArrow(
+                                                icon: Icons.chevron_right,
+                                                onTap: () {
+                                                  _hoverTimer?.cancel();
+                                                  setState(() {
+                                                    _activeImageIndex = (_activeImageIndex + 1) % displayImages.length;
+                                                    _isHovering = false;
+                                                  });
+                                                },
+                                              ),
+                                            ),
+                                        ],
+                                      )
+                                    : Row(
+                                        children: [
+                                          // Left Arrow Button outside main image
+                                          if (displayImages.length > 1) ...[
+                                            _ProductNavArrow(
+                                              icon: Icons.chevron_left,
+                                              onTap: () {
+                                                _hoverTimer?.cancel();
+                                                setState(() {
+                                                  _activeImageIndex = (_activeImageIndex - 1 + displayImages.length) % displayImages.length;
+                                                  _isHovering = false;
+                                                });
+                                              },
+                                            ),
+                                            const SizedBox(width: 16),
+                                          ],
+                                          // Main Image with Hover Zoom
+                                          Expanded(
+                                            child: MouseRegion(
+                                              key: const ValueKey('product_image_mouse_region'),
+                                              onEnter: (_) {
+                                                _hoverTimer?.cancel();
+                                                _hoverTimer = Timer(const Duration(milliseconds: 250), () {
+                                                  if (mounted) {
+                                                    setState(() {
+                                                      _isHovering = true;
+                                                    });
+                                                  }
+                                                });
+                                              },
+                                              onExit: (_) {
+                                                _hoverTimer?.cancel();
+                                                if (_isHovering) {
+                                                  setState(() {
+                                                    _isHovering = false;
+                                                  });
+                                                }
+                                              },
+                                              onHover: (event) {
+                                                if (_isHovering) {
+                                                  setState(() {
+                                                    _hoverPos = event.localPosition;
+                                                  });
+                                                } else {
+                                                  _hoverPos = event.localPosition;
+                                                }
+                                              },
+                                              child: Stack(
+                                                children: [
+                                                  Container(
+                                                    width: double.infinity,
+                                                    decoration: BoxDecoration(border: Border.all(color: AppColors.outline)),
+                                                    child: SizedBox(
+                                                      height: containerHeight,
+                                                      child: activeImageUrl.startsWith('http')
+                                                          ? Image.network(activeImageUrl, fit: product.fit)
+                                                          : Image.asset(activeImageUrl, fit: product.fit),
+                                                    ),
+                                                  ).animate().fade(delay: 200.ms),
+                                                  // Zoom Lens overlay
+                                                  if (_isHovering)
+                                                    Positioned(
+                                                      left: lensLeft,
+                                                      top: lensTop,
+                                                      child: Container(
+                                                        width: lensSize,
+                                                        height: lensSize,
+                                                        decoration: BoxDecoration(
+                                                          color: Colors.black.withValues(alpha: 0.3),
+                                                          border: Border.all(color: Colors.white, width: 1.0),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          // Right Arrow Button outside main image
+                                          if (displayImages.length > 1) ...[
+                                            const SizedBox(width: 16),
+                                            _ProductNavArrow(
+                                              icon: Icons.chevron_right,
+                                              onTap: () {
+                                                _hoverTimer?.cancel();
+                                                setState(() {
+                                                  _activeImageIndex = (_activeImageIndex + 1) % displayImages.length;
+                                                  _isHovering = false;
+                                                });
+                                              },
+                                            ),
+                                          ],
+                                        ],
+                                      ),
+                                const SizedBox(height: 24),
+                                // 3 Proportional Square thumbnails below the main image
+                                if (displayImages.length > 1)
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: displayImages.asMap().entries.map((entry) {
+                                      final int index = entry.key;
+                                      final String url = entry.value;
+                                      final bool isActive = index == activeIndex;
+
+                                      return Expanded(
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                            left: index == 0 ? 0 : 8,
+                                            right: index == displayImages.length - 1 ? 0 : 8,
+                                          ),
+                                          child: GestureDetector(
+                                            onTap: () {
+                                              _hoverTimer?.cancel();
+                                              setState(() {
+                                                _activeImageIndex = index;
+                                                _isHovering = false;
+                                              });
+                                            },
+                                            child: AspectRatio(
+                                              aspectRatio: 1.0,
+                                              child: AnimatedContainer(
+                                                duration: const Duration(milliseconds: 300),
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color: isActive ? AppColors.accent : AppColors.outline,
+                                                    width: isActive ? 2.0 : 1.0,
+                                                  ),
+                                                  boxShadow: isActive
+                                                      ? [
+                                                          BoxShadow(
+                                                            color: AppColors.accent.withValues(alpha: 0.2),
+                                                            blurRadius: 8,
+                                                            spreadRadius: 1,
+                                                          )
+                                                        ]
+                                                      : [],
+                                                ),
+                                                child: Stack(
+                                                  fit: StackFit.expand,
+                                                  children: [
+                                                    url.startsWith('http')
+                                                        ? Image.network(url, fit: product.fit)
+                                                        : Image.asset(url, fit: product.fit),
+                                                    AnimatedOpacity(
+                                                      duration: const Duration(milliseconds: 300),
+                                                      opacity: isActive ? 0.0 : 0.4,
+                                                      child: Container(
+                                                        color: Colors.black,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ).animate().fade(delay: 300.ms),
+                              ],
+                            ),
+                          ),
+                          SizedBox(width: isMobile ? 0 : 80, height: isMobile ? 64 : 0),
+                          // Details Section
+                          Expanded(
+                            flex: isMobile ? 0 : 5,
+                            child: Padding(
+                              padding: EdgeInsets.only(top: isMobile ? 0 : 64),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(product.title, style: AppTextStyles.headlineLg.copyWith(fontSize: isMobile ? 48 : 64, height: 1.1, fontWeight: FontWeight.w200))
+                                    .animate().fade(delay: 300.ms).slideY(),
+                                  const SizedBox(height: 48),
+                                  Text(
+                                    product.description.isNotEmpty
+                                        ? product.description
+                                        : 'Geleneksel cam isleme sanatinin modern mimariyle bulustugu nokta. Bu seri, seffafligin ve yansimanin en saf halini yasam alanlariniza tasiyor. El isciligiyle hazirlanan kenar detaylari ve ustun cam kalitesiyle zamansiz bir parca.',
+                                    style: AppTextStyles.bodyLg,
+                                  ).animate().fade(delay: 400.ms),
+                                  const SizedBox(height: 80),
+                                  
+                                  Text('TEKNIK OZELLIKLER', style: AppTextStyles.labelCaps.copyWith(color: AppColors.textPrimary)),
+                                  const SizedBox(height: 16),
+                                  Container(height: 1, color: AppColors.outline),
+                                  _buildTechRow('MALZEME', 'Ekstra Berrak Flotal Ayna').animate().fade(delay: 500.ms),
+                                  _buildTechRow('STANDART BOYUT', '120cm x 40cm x 85cm').animate().fade(delay: 550.ms),
+                                  _buildTechRow('YUZEY ISLEMI', 'Bizote & Polisaj').animate().fade(delay: 600.ms),
+                                  _buildTechRow('TASIMA KAPASITESI', '45 kg').animate().fade(delay: 650.ms),
+                                  
+                                  const SizedBox(height: 80),
+                                  Wrap(
+                                    spacing: 16,
+                                    runSpacing: 16,
+                                    children: [
+                                      HoverButton(
+                                        text: 'ILETISIME GEC',
+                                        onTap: () {
+                                          context.go('/iletisim');
+                                        },
+                                      ),
+                                      HoverButton(
+                                        text: 'WHATSAPP',
+                                        onTap: () {
+                                          launchUrl(
+                                            Uri.parse('https://wa.me/905000000000'),
+                                            mode: LaunchMode.externalApplication,
+                                          );
+                                        },
+                                      ),
+                                    ],
+                                  ).animate().fade(delay: 700.ms),
+                                ],
                               ),
-                              HoverButton(
-                                text: 'WHATSAPP',
-                                onTap: () {
-                                  launchUrl(
-                                    Uri.parse('https://wa.me/905000000000'),
-                                    mode: LaunchMode.externalApplication,
-                                  );
-                                },
-                              ),
-                            ],
-                          ).animate().fade(delay: 700.ms),
+                            ),
+                          ),
                         ],
                       ),
-                    ),
-                  ),
-                ],
+                      // Floating Zoom Box on desktop
+                      if (!isMobile && _isHovering)
+                        Positioned(
+                          left: containerWidth + 40, // 40px right of main image container
+                          top: 48, // Align perfectly with the top edge of the main image MouseRegion
+                          child: RepaintBoundary(
+                            child: Container(
+                              width: zoomBoxSize,
+                              height: zoomBoxSize,
+                              decoration: BoxDecoration(
+                                color: AppColors.background, // Match solid dark luxury background
+                                border: Border.all(color: AppColors.outline),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withValues(alpha: 0.8),
+                                    blurRadius: 32,
+                                    spreadRadius: 8,
+                                  ),
+                                ],
+                              ),
+                              child: ClipRect(
+                                child: Stack(
+                                  children: [
+                                    Positioned(
+                                      left: -lensLeft * scale,
+                                      top: -lensTop * scale,
+                                      width: imageContainerWidth * scale,
+                                      height: containerHeight * scale,
+                                      child: activeImageUrl.startsWith('http')
+                                          ? Image.network(activeImageUrl, fit: product.fit)
+                                          : Image.asset(activeImageUrl, fit: product.fit),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ).animate().fade(duration: 150.ms),
+                          ),
+                        ),
+                    ],
+                  );
+                },
               ),
             ],
           ),

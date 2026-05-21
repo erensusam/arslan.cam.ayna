@@ -19,6 +19,27 @@
 2. Flutter ve Git durumu kontrol edildi.
 3. Flutter projesi olusturuldu (`flutter create`).
 4. Bu Memory Bank dosyasi olusturuldu.
+# Memory Bank
+
+## Proje
+- Ad: ArslanCamAyna
+- Tip: Flutter (Web + Windows + Android)
+- Olusturma Tarihi: 2026-05-05
+
+## Hedef
+- Baslangic seviyesinde, adim adim yonlendirme ile calisan bir web sitesi/projesi cikarmak.
+- Teknik sorumluluk: Codex (asistan)
+
+## Ortam Durumu
+- Git: Kurulu
+- Flutter: `C:\Users\erens\development\flutter` yolu ile calisiyor
+- Not: `Program Files` altindaki Flutter yerine kullanici dizinindeki Flutter kullaniliyor.
+
+## Yapilanlar
+1. Proje klasoru kontrol edildi (bos).
+2. Flutter ve Git durumu kontrol edildi.
+3. Flutter projesi olusturuldu (`flutter create`).
+4. Bu Memory Bank dosyasi olusturuldu.
 5. Platform dogrulama tamamlandi:
    - `flutter build web` basarili
    - `flutter build windows` basarili
@@ -26,9 +47,8 @@
 6. Git deposu baslatildi ve ilk commit atildi (`main` branch).
 
 ## Siradaki Adimlar
-1. GitHub remote ekleme.
-2. `git push -u origin main` ile uzak depoya gonderme.
-3. Ilk ekran (anasayfa) tasarimi ve iceriklerini ekleme.
+1. Yeni urun taleplerini karsilamaya devam etmek.
+2. Web sitesi arayuzunde kullanici geri bildirimlerine gore ince ayarlamalar yapmak.
 
 ## Komut Kisa Notlari
 - Flutter komutlarinda kullanilan yol:
@@ -39,6 +59,9 @@
 - Cozum: kullanici dizinindeki Flutter SDK kullanildi.
 - `flutter doctor` PATH uyarisi verdi.
 - Cozum plani: `C:\Users\erens\development\flutter\bin` yolunu PATH'te en uste almak.
+- Debug modda yeni eklenen asset dosyalarinin web tarayicisinda 404 hatasi vermesi.
+  - Cozum: Proje `flutter clean` edilip, bagimliliklar yuklendi ve release build alindi.
+
 ## Tasarim Guncellemesi (2026-05-05)
 
 - Proje, premium katalog deneyimine donusturuldu.
@@ -55,6 +78,7 @@
 - Tipografi: Google Fonts Manrope.
 - Iletisim aksiyonlari: WhatsApp ve Instagram linkleri.
 - Not: Gorseller su an demo URL'ler; istenirse Instagram'a uygun gercek urun gorsellerinle degistirecegim.
+
 ## Tasarim Revizyonu (Referans Mockup Uyumlu)
 
 - Kullanici tarafindan paylasilan 1-6 referans tasarima gore ana sayfa yeniden olusturuldu.
@@ -82,14 +106,14 @@
 - CollectionCard gorsel alani AspectRatio yerine Expanded yapisina alindi.
 - Baslik ve alt basliklarda maxLines + ellipsis eklendi.
 - Grid childAspectRatio degerleri yeniden dengelendi (mobile: 0.68, desktop: 0.72).
-- Dogrulama: lutter analyze temiz.
+- Dogrulama: flutter analyze temiz.
 
 ## Layout Constraint Fix (2026-05-06)
 
 - CollectionCard icindeki Expanded kaldirildi; unbounded height hatasi giderildi.
 - Kart govdesi LayoutBuilder ile bounded/unbounded durumlara gore dinamik gorsel yuksekligi hesaplayacak sekilde guncellendi.
 - Column(mainAxisSize: MainAxisSize.min) kullanilarak shrink-wrap uyumu saglandi.
-- Dogrulama: lutter analyze temiz.
+- Dogrulama: flutter analyze temiz.
 
 ## Git ve Paket Senkronizasyonu (2026-05-06)
 
@@ -109,7 +133,18 @@
 - En guncel kodlarla `flutter build web --release` basariyla tamamlandi.
 - Python sunucusu ve ngrok paylasim tüneli `start-share.ps1` yardimiyla aktif edildi: https://reshoot-slept-railroad.ngrok-free.dev
 
+## Yeni Urunlerin Eklemesi ve Optimizasyonlar (2026-05-21)
+
+- Masaustundeki gorseller dizininden kullanicinin yukledigi yeni triptik tablo gorselleri sisteme alindi.
+- Iki adet premium triptik (uc parcali) cam tablo urunu eklendi:
+  - **c7 - MAVI GULLU VE KELEBEKLI TRIPTIK TABLO** (`kelebek_guller_tablo_1.png` ... `3.png`)
+  - **c8 - RENKLI TUY VE KRISTAL KURE TRIPTIK TABLO** (`tuy_kristal_tablo_1.png` ... `3.png`)
+- Tablo gorsellerinin yarim kalmamasi ve tam boyutta goruntulenmesi icin `fit: BoxFit.contain` ayari yapildi.
+- Projede `flutter clean` ve `flutter build web --release` komutlariyla release derlemesi basariyla yenilendi.
+- Kod analizi `flutter analyze` hatasiz ve temiz sonuclandi.
+
 ## Calisma Kurallari (2026-05-21)
 
 - **Kritik Kural**: Kullanici acikça komut vermedigi surece ngrok tüneli güncellenmeyecek ve `MEMORY_BANK.md` guncellenmeyecektir.
 - **Kritik Kural**: Kullanici acikça söylemedigi surece hicbir Git islemi (add, commit, push vb.) yapilmayacaktir.
+- **Git Push**: Kullanicinin istegi uzerine tum degisiklikler git deposuna gonderilmistir.
