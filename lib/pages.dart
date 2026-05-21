@@ -162,6 +162,20 @@ final List<ProductItem> allProducts = [
     ],
     description: 'Metalik mavi ve gumus gecisleriyle bicimlenen cicek kompozisyonu, rafine bir gorunumu guclu bir sanat diliyle bulusturur.',
   ),
+  const ProductItem(
+    id: 'c6',
+    title: 'GOLD DETAYLI TRIPTIK KELEBEK TABLO',
+    category: 'Tablolar',
+    styleTags: ['Aynalı Çerçeve', 'Lüks', 'Kelebek', 'Gold Detay', 'Modern'],
+    imageUrl: 'assets/images/kelebek_tablo_1.jpg',
+    imageUrls: [
+      'assets/images/kelebek_tablo_1.jpg',
+      'assets/images/kelebek_tablo_2.jpg',
+      'assets/images/kelebek_tablo_3.jpg',
+      'assets/images/kelebek_tablo_4.jpg',
+    ],
+    description: 'Premium eskitme ayna cerceve icerisinde yer alan, zarif gold konturlere sahip el yapimi kabartmali kelebek formlari ile yasam alanlariniza derinlik ve sonsuz zerafet katan modern triptik (uc parcali) cam tablo tasarimi.',
+  ),
 
   // --- DRESUARLAR ---
   const ProductItem(
